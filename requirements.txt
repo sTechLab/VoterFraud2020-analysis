@@ -1,0 +1,11 @@
+streamlit
+pandas
+tweepy
+python-dotenv
+gensim
+torch
+sklearn
+nltk
+matplotlib
+bs4
+spacy

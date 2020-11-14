@@ -1,0 +1,5 @@
+.env
+private
+bucket-export/*
+data/*
+__pycache__
