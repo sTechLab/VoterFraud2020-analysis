@@ -58,7 +58,7 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
     print("Procesed all files in {}sec".format(time.time() - start_time))
 
 
-def load_parsed_data(filename, parse_item=None, verbose=False):
+def load_parsed_data(filename, exclude_cols=None, parse_item=None, verbose=True):
     line_count = sum(1 for line in open(filename))
     print("Loading {} json lines".format(line_count))
     progress = 0
@@ -72,14 +72,18 @@ def load_parsed_data(filename, parse_item=None, verbose=False):
             if parse_item:
                 data = parse_item(data)
 
-            json_data.append(data)
+            if exclude_cols:
+                data = {}
+                for k, v in data.items():
+                    if k not in exclude_cols:
+                        data[k] = v
+                json_data.append(data)
+            else:
+                json_data.append(data)
 
             progress += 1
             if progress % 100000 == 0 and verbose:
-                print_progress(
-                    filename, progress, batch_time,
-                    progress / line_count
-                )
+                print_progress(filename, progress, batch_time, progress / line_count)
                 batch_time = time.time()
 
     print("Done loading {}".format(filename))

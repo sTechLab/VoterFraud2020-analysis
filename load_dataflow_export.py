@@ -12,11 +12,17 @@ def parse_tweet(tweet):
     tweet["tokens"] = tokens
     tweet["hashtags"] = hashtags
 
+    # Drop irrelevant columns
+    del tweet["sha256"]
+    del tweet["source"]
+    del tweet["coordinates"]
+    del tweet["processed"]
+    del tweet["media"]
+    del tweet["place"]
+
     for term in crawled_terms:
         if (term in cleaned_text):
             tweet[term] = 1
-        else:
-            tweet[term] = 0
     return tweet
 
 
@@ -24,10 +30,10 @@ EXPORT_TAG = "14-nov"
 
 data_sources = [
     {"type": "tweets", "parser": parse_tweet},
-    #{"type": "retweets"},
-    #{"type": "users"},
-    #{"type": "media"},
-    #{"type": "hashtag"},
+    {"type": "retweets"},
+    {"type": "users"},
+    {"type": "media"},
+    {"type": "hashtag"},
 ]
 
 
