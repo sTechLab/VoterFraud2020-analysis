@@ -141,7 +141,7 @@ def get_tweet_analysis_page():
 
     
     st.subheader("Co-occurence matrix (log percentage)")
-    st.dataframe(np.log(co_occurrence_percentage))
+    st.dataframe(pd.DataFrame(np.log(co_occurrence_percentage), index=co_occurrence.index, columns=co_occurrence.columns))
     
 
 if __name__ == "__main__":
