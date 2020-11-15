@@ -1,7 +1,12 @@
 # voter-fraud-analysis
 
+## Repository set up
+```
+pip install -r requirements.txt
+python -m spacy download en_core_web_lg
+```
 
-## Set-up
+## Creating a new dump for analysis
 
 1. Run [dataflow jobs](https://console.cloud.google.com/dataflow/jobs?project=vote-safety&authuser=2) to export the Datastore to a bucket. Create a new folder in the bucket for the current date (EXPORT_TAG).
 2. Copy the data from the bucket to your machine (run this for each DATA_KIND) 
