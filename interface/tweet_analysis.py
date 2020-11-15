@@ -73,7 +73,8 @@ def get_tweet_analysis_page():
             exclude_cols={"tokens", "cleaned_text", "text", "last_retweeted"},
             limit=LIMIT,
         )
-        recent_tweet_df = tweet_df[tweet_df.timestamp > "2020-10-23 00:00:00"]
+    
+    recent_tweet_df = tweet_df[tweet_df.timestamp > retweet_df.timestamp.min()]
 
     crawled_terms = load_crawled_terms("./keywords-3nov.txt")
 
@@ -115,13 +116,13 @@ def get_tweet_analysis_page():
 
     st.subheader("Crawled terms (since 3rd of November)")
 
-    crawled_terms_df = create_crawled_terms_df(crawled_terms, tweet_df)
+    crawled_terms_df = create_crawled_terms_df(crawled_terms, recent_tweet_df)
     st.dataframe(crawled_terms_df)
 
     selected_crawled_term = st.selectbox("Select term", crawled_terms)
 
-    if selected_crawled_term in tweet_df.columns:
-        filtered_by_crawled_term = tweet_df[tweet_df[selected_crawled_term] == 1]
+    if selected_crawled_term in recent_tweet_df.columns:
+        filtered_by_crawled_term = recent_tweet_df[recent_tweet_df[selected_crawled_term] == 1]
         st.pyplot(plot_hourly_coverage(filtered_by_crawled_term, selected_crawled_term))
 
     st.subheader("Co-occurrence matrix")
