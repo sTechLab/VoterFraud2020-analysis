@@ -4,25 +4,29 @@ import time
 import pandas as pd
 import streamlit as st
 
-def print_progress(filename, progress, start_time):
+
+def print_progress(filename, progress, start_time, percentage=None):
+    percentage_str = "({}%): ".format(round(percentage * 100)) if percentage else ""
     print(
-        "{} lines in {} processed ({} sec)".format(
-            progress, filename, time.time() - start_time
+        "{}{} lines in {} processed ({} sec)".format(
+            percentage_str, progress, filename, time.time() - start_time
         )
     )
 
+
 def parse_value(v):
-  val = None
-  if 'arrayValue' in v:
-    val = []
-    if 'values' in v['arrayValue']:
-      for item in v['arrayValue']['values']:
-        val.append(parse_value(item))
-  elif 'nullValue' in v:  
     val = None
-  else:
-    val = list(v.values())[0]
-  return val
+    if "arrayValue" in v:
+        val = []
+        if "values" in v["arrayValue"]:
+            for item in v["arrayValue"]["values"]:
+                val.append(parse_value(item))
+    elif "nullValue" in v:
+        val = None
+    else:
+        val = list(v.values())[0]
+    return val
+
 
 def parse_dataflow_export(directory, output_file, parse_item=None):
     start_time = time.time()
@@ -38,9 +42,9 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
                 data = {}
                 for k, v in raw.items():
                     data[k] = parse_value(v)
-                
-                if (parse_item):
-                  data = parse_item(data)
+
+                if parse_item:
+                    data = parse_item(data)
 
                 with open(output_file, "a") as w:
                     w.write(json.dumps(data) + "\n")
@@ -48,46 +52,47 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
                 if processed % 10000 == 0:
                     print_progress(filename, processed, batch_time)
                     batch_time = time.time()
-        
+
             print("Done processing {}".format(filename))
             print_progress(filename, processed, batch_time)
     print("Procesed all files in {}sec".format(time.time() - start_time))
-                    
 
-# @st.cache(suppress_st_warning=True, allow_output_mutation=True)          
-def load_parsed_data(filename, parse_item=None):
-  # loading_bar = st.progress(0)
-  line_count = sum(1 for line in open(filename))
-  print("Loading {} json lines".format(line_count))
-  progress = 0
-  start_time = time.time()
-  batch_time = start_time
-  json_data = []
-  with open(filename) as r:
-    for line in r:
-      data = json.loads(line)
 
-      if (parse_item):
-        data = parse_item(data)
-      
-      json_data.append(data)
-      
-      progress += 1
-      if progress % 100000 == 0:
-        # loading_bar.progress(progress / line_count)
-        print_progress(filename, progress, batch_time)
-        batch_time = time.time()
-  
-  print("Done loading {}".format(filename))
-  print_progress(filename, progress, start_time)
-  # loading_bar.empty()
+def load_parsed_data(filename, parse_item=None, verbose=False):
+    line_count = sum(1 for line in open(filename))
+    print("Loading {} json lines".format(line_count))
+    progress = 0
+    start_time = time.time()
+    batch_time = start_time
+    json_data = []
+    with open(filename) as r:
+        for line in r:
+            data = json.loads(line)
 
-  return pd.DataFrame(json_data)
+            if parse_item:
+                data = parse_item(data)
+
+            json_data.append(data)
+
+            progress += 1
+            if progress % 100000 == 0 and verbose:
+                print_progress(
+                    filename, progress, batch_time,
+                    progress / line_count
+                )
+                batch_time = time.time()
+
+    print("Done loading {}".format(filename))
+    print_progress(filename, progress, start_time)
+
+    return pd.DataFrame(json_data)
+
 
 def load_crawled_terms(filename):
-  crawled_terms = []
-  with open(filename) as r:
-    for line in r:
-      crawled_terms.append(line.replace("\n", ""))
-  
-  return crawled_terms
+    crawled_terms = []
+    with open(filename) as r:
+        for line in r:
+            crawled_terms.append(line.replace("\n", ""))
+
+    return crawled_terms
+

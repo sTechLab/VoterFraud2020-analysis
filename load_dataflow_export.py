@@ -4,7 +4,7 @@ from bs4 import MarkupResemblesLocatorWarning
 
 warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
 
-crawled_terms = load_crawled_terms("./data/keywords-3nov.txt")
+crawled_terms = load_crawled_terms("./keywords-3nov.txt")
 
 def parse_tweet(tweet):
     cleaned_text, tokens, hashtags = tokenize_tweet(tweet["text"])
