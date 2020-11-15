@@ -21,7 +21,7 @@ def parse_tweet(tweet):
     del tweet["place"]
 
     for term in crawled_terms:
-        if (term in cleaned_text):
+        if (term.lower() in tweet["text"].lower()):
             tweet[term] = 1
     return tweet
 
@@ -29,11 +29,11 @@ def parse_tweet(tweet):
 EXPORT_TAG = "14-nov"
 
 data_sources = [
-    {"type": "tweets", "parser": parse_tweet},
     {"type": "retweets"},
     {"type": "users"},
     {"type": "media"},
     {"type": "hashtag"},
+    {"type": "tweets", "parser": parse_tweet},
 ]
 
 
