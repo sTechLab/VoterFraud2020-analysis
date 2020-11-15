@@ -30,6 +30,9 @@ def parse_value(v):
 
 def parse_dataflow_export(directory, output_file, parse_item=None):
     start_time = time.time()
+    if (os.path.exists(output_file)):
+        print("{} already exists!")
+        return
     for filename in os.listdir(directory):
         print("Processing {}".format(filename))
         processed = 0
@@ -58,8 +61,11 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
     print("Procesed all files in {}sec".format(time.time() - start_time))
 
 
-def load_parsed_data(filename, exclude_cols=None, parse_item=None, verbose=True):
+def load_parsed_data(
+    filename, include_cols=None, exclude_cols=None, parse_item=None, verbose=True, limit=None
+):
     line_count = sum(1 for line in open(filename))
+    total = limit if limit and limit < line_count else line_count
     print("Loading {} json lines".format(line_count))
     progress = 0
     start_time = time.time()
@@ -67,24 +73,33 @@ def load_parsed_data(filename, exclude_cols=None, parse_item=None, verbose=True)
     json_data = []
     with open(filename) as r:
         for line in r:
+            if (limit and progress >= limit):
+                break
+
             data = json.loads(line)
 
             if parse_item:
                 data = parse_item(data)
-
-            if exclude_cols:
-                data = {}
+            
+            if include_cols:
+                parsed_data = {}
+                for k, v in data.items():
+                    if k in include_cols:
+                        parsed_data[k] = v
+                json_data.append(parsed_data)
+            elif exclude_cols:
+                parsed_data = {}
                 for k, v in data.items():
                     if k not in exclude_cols:
-                        data[k] = v
-                json_data.append(data)
+                        parsed_data[k] = v
+                json_data.append(parsed_data)
             else:
                 json_data.append(data)
 
             progress += 1
             if progress % 100000 == 0 and verbose:
-                print_progress(filename, progress, batch_time, progress / line_count)
-                batch_time = time.time()
+                print_progress(filename, progress, batch_time, progress / total)
+                batch_time = time.time()   
 
     print("Done loading {}".format(filename))
     print_progress(filename, progress, start_time)
