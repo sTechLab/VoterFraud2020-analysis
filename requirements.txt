@@ -9,3 +9,4 @@ nltk
 matplotlib
 bs4
 spacy
+seaborn

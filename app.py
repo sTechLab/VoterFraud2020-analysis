@@ -1,8 +1,8 @@
 import streamlit as st
-from interface.exploration_page import get_exploration_page 
+from interface.tweet_analysis import get_tweet_analysis_page 
 
 PAGES = {
-    "Data Exploration": get_exploration_page
+    "Tweet Analysis": get_tweet_analysis_page
 }
 
 st.sidebar.title("Navigation")

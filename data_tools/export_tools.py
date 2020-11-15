@@ -1,10 +1,12 @@
 import os
 import json
 import time
+import pandas as pd
+import streamlit as st
 
 def print_progress(filename, progress, start_time):
     print(
-        "{} in {} processed: {} sec.".format(
+        "{} lines in {} processed ({} sec)".format(
             progress, filename, time.time() - start_time
         )
     )
@@ -27,7 +29,7 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
     for filename in os.listdir(directory):
         print("Processing {}".format(filename))
         processed = 0
-        loop_time = time.time()
+        batch_time = time.time()
 
         with open(os.path.join(directory, filename), "r") as r:
             for line in r:
@@ -44,13 +46,48 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
                     w.write(json.dumps(data) + "\n")
                 processed += 1
                 if processed % 10000 == 0:
-                    print_progress(filename, processed, loop_time)
-                    loop_time = time.time()
+                    print_progress(filename, processed, batch_time)
+                    batch_time = time.time()
         
             print("Done processing {}".format(filename))
-            print_progress(filename, processed, loop_time)
+            print_progress(filename, processed, batch_time)
     print("Procesed all files in {}sec".format(time.time() - start_time))
                     
-                    
 
-        
+# @st.cache(suppress_st_warning=True, allow_output_mutation=True)          
+def load_parsed_data(filename, parse_item=None):
+  # loading_bar = st.progress(0)
+  line_count = sum(1 for line in open(filename))
+  print("Loading {} json lines".format(line_count))
+  progress = 0
+  start_time = time.time()
+  batch_time = start_time
+  json_data = []
+  with open(filename) as r:
+    for line in r:
+      data = json.loads(line)
+
+      if (parse_item):
+        data = parse_item(data)
+      
+      json_data.append(data)
+      
+      progress += 1
+      if progress % 100000 == 0:
+        # loading_bar.progress(progress / line_count)
+        print_progress(filename, progress, batch_time)
+        batch_time = time.time()
+  
+  print("Done loading {}".format(filename))
+  print_progress(filename, progress, start_time)
+  # loading_bar.empty()
+
+  return pd.DataFrame(json_data)
+
+def load_crawled_terms(filename):
+  crawled_terms = []
+  with open(filename) as r:
+    for line in r:
+      crawled_terms.append(line.replace("\n", ""))
+  
+  return crawled_terms
