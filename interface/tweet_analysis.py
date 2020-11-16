@@ -5,8 +5,10 @@ import matplotlib.dates as mdates
 import pandas as pd
 from .utils import plot_hourly_coverage
 import numpy as np
+
 # Plot styles
 import matplotlib.style as style
+import json
 
 style.use("seaborn-poster")
 style.use("ggplot")
@@ -15,12 +17,10 @@ LIMIT = None
 
 CRAWLED_TERMS = load_crawled_terms("./keywords-3nov.txt")
 
+
 @st.cache(allow_output_mutation=True, persist=True)
 def load_tweet_df():
-    cast_cols = {
-        "tweet_count": "int32",
-        "quote_count": "int32" 
-    }
+    cast_cols = {"tweet_count": "int32", "quote_count": "int32"}
     for term in CRAWLED_TERMS:
         cast_cols[term] = "Sparse[int8]"
     return load_parsed_data(
@@ -37,7 +37,7 @@ def load_tweet_df():
         },
         verbose=True,
         limit=LIMIT,
-        cast_cols=cast_cols
+        cast_cols=cast_cols,
     )
 
 
@@ -68,14 +68,15 @@ def create_crawled_terms_df(crawled_terms, tweet_df):
 
     return crawled_terms_df
 
+
 def lookup_parsed_tweet_data(indices):
     counter = 0
     data = []
-    with open('../data/14-nov/parsed_tweets.json') as r:
+    with open("./data/14-nov/parsed_tweets.json") as r:
         for line in r:
             if counter in indices:
                 data.append(json.loads(line))
-                if (len(data) == len(indices)):
+                if len(data) == len(indices):
                     break
             counter += 1
     return data
@@ -100,7 +101,7 @@ def get_tweet_analysis_page():
             exclude_cols={"tokens", "cleaned_text", "text", "last_retweeted"},
             limit=LIMIT,
         )
-    
+
     recent_tweet_df = tweet_df[tweet_df.timestamp > retweet_df.timestamp.min()]
 
     crawled_terms = CRAWLED_TERMS
@@ -146,11 +147,43 @@ def get_tweet_analysis_page():
     crawled_terms_df = create_crawled_terms_df(crawled_terms, recent_tweet_df)
     st.dataframe(crawled_terms_df)
 
-    selected_crawled_term = st.selectbox("Select term", crawled_terms)
+    selected_crawled_term = st.selectbox("Select term", crawled_terms_df["term"].values)
 
     if selected_crawled_term in recent_tweet_df.columns:
-        filtered_by_crawled_term = recent_tweet_df[recent_tweet_df[selected_crawled_term] == 1]
+        filtered_by_crawled_term = recent_tweet_df[
+            recent_tweet_df[selected_crawled_term] == 1
+        ]
         st.pyplot(plot_hourly_coverage(filtered_by_crawled_term, selected_crawled_term))
+
+    term_stats = (
+        tweet_df[tweet_df[selected_crawled_term] == 1][["retweet_count", "quote_count"]]
+        .fillna(0)
+        .astype(int)
+    )
+    top_retweeted = term_stats.nlargest(10, "retweet_count")
+    top_quoted = term_stats.nlargest(10, "quote_count")
+
+    st.subheader("10 most retweeted tweets for '{}'".format(selected_crawled_term))
+    st.table(
+        pd.DataFrame(
+            map(
+                lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
+                lookup_parsed_tweet_data(top_retweeted.index.values),
+            ),
+            columns=["text", "quote_count", "retweet_count"],
+        )
+    )
+
+    st.subheader("10 most quoted tweets for '{}'".format(selected_crawled_term))
+    st.table(
+        pd.DataFrame(
+            map(
+                lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
+                lookup_parsed_tweet_data(top_quoted.index.values),
+            ),
+            columns=["text", "quote_count", "retweet_count"],
+        )
+    )
 
     st.subheader("Co-occurrence matrix")
 
@@ -160,16 +193,22 @@ def get_tweet_analysis_page():
 
     st.dataframe(co_occurrence)
 
-
     co_occurrence_diagonal = np.diagonal(co_occurrence)
 
-    with np.errstate(divide='ignore', invalid='ignore'):
-        co_occurrence_percentage = np.nan_to_num(np.true_divide(co_occurrence, co_occurrence_diagonal[:, None]))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        co_occurrence_percentage = np.nan_to_num(
+            np.true_divide(co_occurrence, co_occurrence_diagonal[:, None])
+        )
 
-    
     st.subheader("Co-occurence matrix (log percentage)")
-    st.dataframe(pd.DataFrame(np.log(co_occurrence_percentage), index=co_occurrence.index, columns=co_occurrence.columns))
+    st.dataframe(
+        pd.DataFrame(
+            np.log(co_occurrence_percentage),
+            index=co_occurrence.index,
+            columns=co_occurrence.columns,
+        )
+    )
 
-    
+
 if __name__ == "__main__":
     get_tweet_analysis_page()
