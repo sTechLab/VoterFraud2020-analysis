@@ -6,6 +6,7 @@ warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
 
 crawled_terms = load_crawled_terms("./keywords-3nov.txt")
 
+
 def parse_tweet(tweet):
     cleaned_text, tokens, hashtags = tokenize_tweet(tweet["text"])
     tweet["cleaned_text"] = cleaned_text
@@ -21,7 +22,7 @@ def parse_tweet(tweet):
     del tweet["place"]
 
     for term in crawled_terms:
-        if (term.lower() in tweet["text"].lower()):
+        if term.lower() in tweet["text"].lower():
             tweet[term] = 1
     return tweet
 
@@ -45,5 +46,7 @@ for data_source in data_sources:
         EXPORT_TAG, data_type
     )
     parse_dataflow_export(
-        data_directory, "./data/{}/parsed_{}.json".format(EXPORT_TAG, data_type), data_parser
+        data_directory,
+        "./data/{}/test_parsed_{}.json".format(EXPORT_TAG, data_type),
+        data_parser,
     )
