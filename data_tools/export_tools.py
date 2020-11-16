@@ -60,9 +60,23 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
             print_progress(filename, processed, batch_time)
     print("Procesed all files in {}sec".format(time.time() - start_time))
 
+from typing import List
+def optimize_floats(df: pd.DataFrame) -> pd.DataFrame:
+    floats = df.select_dtypes(include=['float64']).columns.tolist()
+    df[floats] = df[floats].apply(pd.to_numeric, downcast='float')
+    return df
+
+
+def optimize_ints(df: pd.DataFrame) -> pd.DataFrame:
+    ints = df.select_dtypes(include=['int64']).columns.tolist()
+    df[ints] = df[ints].apply(pd.to_numeric, downcast='integer')
+    return df
+
+def optimize(df: pd.DataFrame, datetime_features: List[str] = []):
+    return optimize_floats(optimize_ints(df))
 
 def load_parsed_data(
-    filename, include_cols=None, exclude_cols=None, parse_item=None, verbose=True, limit=None
+    filename, include_cols=None, exclude_cols=None, cast_cols=None, parse_item=None, verbose=True, limit=None
 ):
     line_count = sum(1 for line in open(filename))
     total = limit if limit and limit < line_count else line_count
@@ -104,7 +118,13 @@ def load_parsed_data(
     print("Done loading {}".format(filename))
     print_progress(filename, progress, start_time)
 
-    return pd.DataFrame(json_data)
+    optimized_df = optimize(pd.DataFrame(json_data))
+
+    if (cast_cols):
+        for (col, cast_type) in cast_cols.items():
+            if col in optimized_df.columns:
+                optimized_df[col] = optimized_df[col].fillna(0).astype(cast_type)
+    return optimized_df
 
 
 def load_crawled_terms(filename):

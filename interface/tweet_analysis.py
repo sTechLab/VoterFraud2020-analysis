@@ -13,7 +13,35 @@ style.use("ggplot")
 
 LIMIT = None
 
-@st.cache(allow_output_mutation=True)
+CRAWLED_TERMS = load_crawled_terms("./keywords-3nov.txt")
+
+@st.cache(allow_output_mutation=True, persist=True)
+def load_tweet_df():
+    cast_cols = {
+        "tweet_count": "int32",
+        "quote_count": "int32" 
+    }
+    for term in CRAWLED_TERMS:
+        cast_cols[term] = "Sparse[int8]"
+    return load_parsed_data(
+        "./data/14-nov/parsed_tweets.json",
+        exclude_cols={
+            "tokens",
+            "cleaned_text",
+            "text",
+            "last_retweeted",
+            "place",
+            "processed",
+            "media",
+            "isDeleted",
+        },
+        verbose=True,
+        limit=LIMIT,
+        cast_cols=cast_cols
+    )
+
+
+@st.cache(allow_output_mutation=True, persist=True)
 def load_df(filename, include_cols=None, exclude_cols={}, limit=None):
     return load_parsed_data(
         filename,
@@ -31,7 +59,7 @@ def create_crawled_terms_df(crawled_terms, tweet_df):
         if term in tweet_df.columns:
             stats = {}
             stats["term"] = term
-            stats["tweet count"] = tweet_df[term].value_counts().values[0]
+            stats["tweet count"] = tweet_df[term].value_counts().values[1]
             crawled_terms_stats.append(stats)
 
     crawled_terms_df = pd.DataFrame(crawled_terms_stats).sort_values(
@@ -39,6 +67,18 @@ def create_crawled_terms_df(crawled_terms, tweet_df):
     )
 
     return crawled_terms_df
+
+def lookup_parsed_tweet_data(indices):
+    counter = 0
+    data = []
+    with open('../data/14-nov/parsed_tweets.json') as r:
+        for line in r:
+            if counter in indices:
+                data.append(json.loads(line))
+                if (len(data) == len(indices)):
+                    break
+            counter += 1
+    return data
 
 
 def get_tweet_analysis_page():
@@ -52,20 +92,7 @@ def get_tweet_analysis_page():
         )
 
     with st.spinner("Loading tweet data"):
-        tweet_df = load_df(
-            "./data/14-nov/parsed_tweets.json",
-            exclude_cols={
-                "tokens",
-                "cleaned_text",
-                "text",
-                "last_retweeted",
-                "place",
-                "processed",
-                "media",
-                "isDeleted",
-            },
-            limit=LIMIT,
-        )
+        tweet_df = load_tweet_df()
 
     with st.spinner("Loading retweet data"):
         retweet_df = load_df(
@@ -76,7 +103,7 @@ def get_tweet_analysis_page():
     
     recent_tweet_df = tweet_df[tweet_df.timestamp > retweet_df.timestamp.min()]
 
-    crawled_terms = load_crawled_terms("./keywords-3nov.txt")
+    crawled_terms = CRAWLED_TERMS
 
     st.subheader("Basic stats")
     st.markdown(
@@ -128,7 +155,7 @@ def get_tweet_analysis_page():
     st.subheader("Co-occurrence matrix")
 
     terms_in_df = [term for term in crawled_terms if term in tweet_df.columns]
-    crawled_terms_tweet_df = tweet_df[terms_in_df].fillna(0).astype(int)
+    crawled_terms_tweet_df = tweet_df[terms_in_df].sparse.to_dense().astype("int32")
     co_occurrence = crawled_terms_tweet_df.T.dot(crawled_terms_tweet_df)
 
     st.dataframe(co_occurrence)
@@ -142,7 +169,7 @@ def get_tweet_analysis_page():
     
     st.subheader("Co-occurence matrix (log percentage)")
     st.dataframe(pd.DataFrame(np.log(co_occurrence_percentage), index=co_occurrence.index, columns=co_occurrence.columns))
-    
 
+    
 if __name__ == "__main__":
     get_tweet_analysis_page()
