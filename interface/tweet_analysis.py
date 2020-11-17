@@ -131,35 +131,30 @@ def get_tweet_analysis_page():
     co_occurrence_diagonal = np.diagonal(co_occurrence)
 
     with np.errstate(divide="ignore", invalid="ignore"):
-        co_occurrence_percentage = np.nan_to_num(
+        co_occurrence_fraction = np.nan_to_num(
             np.true_divide(co_occurrence, co_occurrence_diagonal[:, None])
         )
 
-    co_occurrence_df = pd.DataFrame(
-        np.log(co_occurrence_percentage),
-        index=co_occurrence.index,
-        columns=co_occurrence.columns,
-    )
-
-    
 
     fig = plt.figure()
     st.subheader("Co-occurence heatmap (inverted log-scaling)")
-    st.markdown("Higher means more correlation")
-    co_occurrence_heatmap_df = pd.DataFrame(
-        10 / np.abs(np.log(co_occurrence_percentage)),
-        index=co_occurrence.index,
-        columns=co_occurrence.columns,
-    )
+    st.markdown("Closer to 0 means higher correlation")
+    with st.echo():
+        co_occurrence_heatmap_df = pd.DataFrame(
+            np.log(co_occurrence_fraction),
+            index=co_occurrence.index,
+            columns=co_occurrence.columns,
+        )
+    np.fill_diagonal(co_occurrence_heatmap_df.values, np.nan)
     sns.heatmap(
         co_occurrence_heatmap_df,
         cbar=False,
         square=True,
         annot=True,
-        vmin=0,
-        vmax=7.5,
-        center=0,
-        cmap="coolwarm_r",
+        vmin=-5,
+        vmax=0,
+        center=-2,
+        cmap="PuBu",
         linecolor="black",
     )
 
@@ -177,11 +172,10 @@ def get_tweet_analysis_page():
 
     selected_crawled_term = st.selectbox("Select term", crawled_terms_df["term"].values)
 
-    if selected_crawled_term in recent_tweet_df.columns:
-        filtered_by_crawled_term = recent_tweet_df[
-            recent_tweet_df[selected_crawled_term] == 1
-        ]
-        st.pyplot(plot_hourly_coverage(filtered_by_crawled_term, selected_crawled_term))
+    filtered_by_crawled_term = recent_tweet_df[
+        recent_tweet_df[selected_crawled_term] == 1
+    ]
+    st.pyplot(plot_hourly_coverage(filtered_by_crawled_term, selected_crawled_term))
 
     term_stats = (
         recent_tweet_df[recent_tweet_df[selected_crawled_term] == 1][
@@ -190,8 +184,25 @@ def get_tweet_analysis_page():
         .fillna(0)
         .astype(int)
     )
-    top_retweeted = term_stats.nlargest(10, "retweet_count").sort_values('retweet_count', ascending=False)
-    top_quoted = term_stats.nlargest(10, "quote_count").sort_values('quote_count', ascending=False)
+    top_retweeted = term_stats.nlargest(10, "retweet_count").sort_values(
+        "retweet_count", ascending=False
+    )
+    top_quoted = term_stats.nlargest(10, "quote_count").sort_values(
+        "quote_count", ascending=False
+    )
+
+    st.subheader("10 randomly sampled tweets from '{}'".format(selected_crawled_term))
+    st.table(
+        pd.DataFrame(
+            map(
+                lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
+                lookup_parsed_tweet_data(
+                    filtered_by_crawled_term.sample(n=10).index.values
+                ),
+            ),
+            columns=["text", "quote_count", "retweet_count"],
+        )
+    )
 
     st.subheader("10 most retweeted tweets for '{}'".format(selected_crawled_term))
     st.table(
