@@ -1,9 +1,16 @@
 # voter-fraud-analysis
 
+## [Link to the live demo application](http://35.208.173.244/)
+
 ## Repository set up
 ```
 pip install -r requirements.txt
 python -m spacy download en_core_web_lg
+```
+
+### Run the streamlit app
+```
+streamlit run app.py
 ```
 
 ## Creating a new dump for analysis
