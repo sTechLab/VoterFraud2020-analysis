@@ -11,6 +11,8 @@ from .utils import (
 )
 import numpy as np
 import seaborn as sns
+from collections import Counter
+from spacy.lang.en.stop_words import STOP_WORDS
 
 # Plot styles
 import matplotlib.style as style
@@ -22,6 +24,27 @@ style.use("ggplot")
 LIMIT = None
 
 CRAWLED_TERMS = load_crawled_terms("./keywords-3nov.txt")
+
+
+@st.cache()
+def most_common_hashtags(tweet_df, k=10):
+    counted_hashtags = Counter(
+        [('#' + hashtag.lower()) for hashtags in tweet_df["hashtags"] for hashtag in hashtags]
+    )
+    return pd.DataFrame(counted_hashtags.most_common(k), columns=["hashtag", "tweet count"])
+
+
+STOP_WORDS = STOP_WORDS.union({'pron', '', ' ', '”', '“'})
+
+def include_token(token):
+    return token not in STOP_WORDS and not token.startswith("hashtag")
+
+@st.cache()
+def most_common_tokens(tweet_token_df, k=10):
+    counted_tokens = Counter(
+        [token for tokens in tweet_token_df["tokens"] for token in tokens if include_token(token)]
+    )
+    return pd.DataFrame(counted_tokens.most_common(k), columns=["token", "tweet count"])
 
 
 def create_crawled_terms_df(crawled_terms, tweet_df):
@@ -63,6 +86,11 @@ def get_tweet_analysis_page():
             retweet_df.timestamp.min(), CRAWLED_TERMS
         )
 
+    with st.spinner("Loading tweet tokens"):
+        tweet_tokens_df = load_df(
+            "./data/14-nov/parsed_tweets.json", include_cols={"tokens"}
+        )
+
     st.subheader("Basic stats")
     st.markdown(
         """
@@ -99,6 +127,14 @@ def get_tweet_analysis_page():
     st.pyplot(plot_hourly_coverage(retweet_df, "Retweets"))
     st.pyplot(plot_hourly_coverage(recent_tweet_df, "Tweets since Oct 23rd"))
 
+
+    col1, col2 = st.beta_columns(2)
+    col1.subheader("Most common hashtags")
+    col1.dataframe(most_common_hashtags(recent_tweet_df, 25))
+
+    col2.subheader("Most common tokens")
+    col2.dataframe(most_common_tokens(tweet_tokens_df, 25))
+
     st.subheader("All crawled terms (since 3rd of November)")
 
     crawled_terms_df = create_crawled_terms_df(CRAWLED_TERMS, recent_tweet_df)
@@ -134,7 +170,6 @@ def get_tweet_analysis_page():
         co_occurrence_fraction = np.nan_to_num(
             np.true_divide(co_occurrence, co_occurrence_diagonal[:, None])
         )
-
 
     fig = plt.figure()
     st.subheader("Co-occurence heatmap (inverted log-scaling)")
@@ -190,6 +225,12 @@ def get_tweet_analysis_page():
     top_quoted = term_stats.nlargest(10, "quote_count").sort_values(
         "quote_count", ascending=False
     )
+
+    st.subheader("Top hashtags from '{}'".format(selected_crawled_term))
+    st.dataframe(most_common_hashtags(filtered_by_crawled_term, 15))
+
+    #st.subheader("Most common terms")
+    #st.dataframe(most_common_tokens(tweet_tokens_df, 10))
 
     st.subheader("10 randomly sampled tweets from '{}'".format(selected_crawled_term))
     st.table(
