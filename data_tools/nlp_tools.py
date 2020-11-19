@@ -62,36 +62,62 @@ FORBIDDEN_SYMBOLS = [
     "🇧",
     "o",
     "N",
+    "”",
+    "“",
+    "🇺",
 ]
 
 PUNCTUATION = set(string.punctuation)
 PUNCTUATION.update(set(FORBIDDEN_SYMBOLS))
+escape_punct_re = re.compile("[%s]" % re.escape(string.punctuation))
+
+INCLUDE_ENTITIES = False
+
+spacy_disabled_modules = ["tagger", "parser", "entity", "textcat"]
+
+if not INCLUDE_ENTITIES:
+    spacy_disabled_modules.append("ner")
 
 
-def doc2token(txt):
-
-    escape_punct_re = re.compile("[%s]" % re.escape(string.punctuation))
+def doc2tokens(txt):
     escape_punct = lambda x: escape_punct_re.sub("", x)
-
-    parsed = parser(txt, disable=["tagger", "parser", "entity", "ner", "textcat"])
+    parsed = parser(txt, disable=spacy_disabled_modules)
     tokens = list()
+    entities = list()
+
     for token in parsed:
-        # if token.is_punct or token.is_digit:
-        #    continue
         if token.lemma_ in PUNCTUATION:
             continue
-        # if token.lemma_=='-PRON-':
-        #    continue
+        if token.lemma_ == "-PRON-":
+            continue
         else:
             tokens.append(escape_punct(token.lemma_.lower()).strip())
-    return tokens
+
+    if INCLUDE_ENTITIES:
+        for ent in parsed.ents:
+            if ent.label_ in {
+                "PERSON",
+                "NORP",
+                "FAC",
+                "ORG",
+                "GPE",
+                "LOC",
+                "PRODUCT",
+                "EVENT",
+                "WORK_OF_ART",
+                "LAW",
+            }:
+                entities.append(ent.text)
+
+    return tokens, entities
+
 
 RE_PATTERNS = {
     "url": re.compile("http(.+)?(\W|$)"),
     "spacing": re.compile("[\n\r\t ]+"),
     "leading_mention": "^(\.?@\w+([^\w]|$))+",
     "mention": "@(\w+)",
-    "hashtag": "#(\w+)"
+    "hashtag": "#(\w+)",
 }
 
 
@@ -106,7 +132,6 @@ def tokenize_tweet(x):
     normalize_spaces = lambda x: re.sub(RE_PATTERNS["spacing"], " ", x)
 
     remove_leading_mentions = lambda x: re.sub(RE_PATTERNS["leading_mention"], "", x)
-    # remove_emoji = lambda x: demoji.replace(x, " ")
 
     encodeMention = lambda x: re.sub(RE_PATTERNS["mention"], "mention\g<1>", x)
     encodeHashtag = lambda x: re.sub(RE_PATTERNS["hashtag"], "hashtag\g<1>", x)
@@ -115,9 +140,10 @@ def tokenize_tweet(x):
         encodeMention(
             remove_leading_mentions(normalize_spaces(remove_urls(unescape_html(x))))
         )
-    ) 
+    )
 
-    tokens = doc2token(cleaned_text)
+    tokens, entities = doc2tokens(cleaned_text)
     hashtags = re.findall(RE_PATTERNS["hashtag"], x)
-    return cleaned_text, tokens, hashtags
+
+    return cleaned_text, tokens, hashtags, entities
 
