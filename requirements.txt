@@ -10,3 +10,5 @@ matplotlib
 bs4
 spacy
 seaborn
+twarq
+tqdm
