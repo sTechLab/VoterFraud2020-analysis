@@ -43,7 +43,8 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
                 raw_json = json.loads(line)
                 raw = raw_json["properties"]
                 data = {}
-                data["datastore_id"] = raw_json["key"]["path"][0]["id"]
+                if ("id" in raw_json["key"]["path"][0]):
+                    data["datastore_id"] = raw_json["key"]["path"][0]["id"]
                 for k, v in raw.items():
                     data[k] = parse_value(v)
 
