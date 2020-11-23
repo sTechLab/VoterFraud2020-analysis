@@ -71,11 +71,13 @@ def load_df(filename, include_cols=None, exclude_cols={}, limit=None, index_col=
 def load_tweet_df(recent_offset, crawled_terms):
     cast_cols = {"tweet_count": "int32", "quote_count": "int32"}
     for term in crawled_terms:
-        cast_cols[term] = "Sparse[int8]"
+        cast_cols[term.lower()] = "Sparse[int8]"
     tweet_df = load_parsed_data(
         "./data/14-nov/parsed_tweets.json",
         exclude_cols={
-            "tokens",
+            "entities",
+            "replyTo",
+            "replyTo_user",
             "cleaned_text",
             "text",
             "last_retweeted",

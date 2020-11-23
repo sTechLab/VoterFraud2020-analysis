@@ -47,11 +47,6 @@ def prepare_shared_state():
 
     state.crawled_terms_df = create_crawled_terms_df(CRAWLED_TERMS, recent_tweet_df)
 
-    with st.spinner("Loading tweet tokens"):
-        state.tweet_tokens_df = load_df(
-            "./data/14-nov/parsed_tweets.json", include_cols={"tokens"}
-        )
-
     return state
 
 

@@ -54,7 +54,6 @@ def get_tweet_analysis_page(shared_state):
     recent_tweet_df = shared_state.recent_tweet_df
     retweet_df = shared_state.retweet_df
     crawled_terms_df = shared_state.crawled_terms_df
-    tweet_tokens_df = shared_state.tweet_tokens_df
 
     st.subheader("Basic stats")
     st.markdown(
@@ -97,7 +96,7 @@ def get_tweet_analysis_page(shared_state):
     col1.dataframe(most_common_hashtags(recent_tweet_df, 25))
 
     col2.subheader("Most common tokens")
-    col2.dataframe(most_common_tokens(tweet_tokens_df, 25))
+    col2.dataframe(most_common_tokens(recent_tweet_df, 25))
 
     st.subheader("All crawled terms (since 3rd of November)")
 
