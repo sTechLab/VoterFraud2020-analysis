@@ -67,6 +67,6 @@ for data_source in data_sources:
     )
     parse_dataflow_export(
         data_directory,
-        "./data/{}/test_parsed_{}.json".format(EXPORT_TAG, data_type),
+        "./data/{}/parsed_{}.json".format(EXPORT_TAG, data_type),
         data_parser,
     )

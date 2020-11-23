@@ -4,6 +4,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from data_tools import lookup_parsed_data, load_parsed_data
+from spacy.lang.en.stop_words import STOP_WORDS
+from collections import Counter
 
 LIMIT = None
 
@@ -54,6 +56,18 @@ def lookup_parsed_tweet_data(indices):
 
 
 @st.cache(allow_output_mutation=True, persist=True)
+def load_df(filename, include_cols=None, exclude_cols={}, limit=None, index_col=None):
+    return load_parsed_data(
+        filename,
+        include_cols=include_cols,
+        exclude_cols=exclude_cols,
+        verbose=True,
+        limit=limit,
+        index_col=index_col,
+    )
+
+
+@st.cache(allow_output_mutation=True, persist=True)
 def load_tweet_df(recent_offset, crawled_terms):
     cast_cols = {"tweet_count": "int32", "quote_count": "int32"}
     for term in crawled_terms:
@@ -82,14 +96,27 @@ def load_tweet_df(recent_offset, crawled_terms):
 
 
 @st.cache(allow_output_mutation=True, persist=True)
-def load_df(filename, include_cols=None, exclude_cols={}, limit=None, index_col=None):
+def load_retweet_df():
     return load_parsed_data(
-        filename,
-        include_cols=include_cols,
-        exclude_cols=exclude_cols,
-        verbose=True,
-        limit=limit,
-        index_col=index_col,
+        "./data/14-nov/parsed_retweets.json",
+        exclude_cols={"tokens", "cleaned_text", "text", "last_retweeted"},
+        limit=LIMIT,
+    )
+
+
+@st.cache(allow_output_mutation=True, persist=True)
+def load_user_df():
+    cast_cols = {
+        "followed_cnts": "int32",
+        "friends_count": "int32",
+        "followers_count": "int32",
+    }
+    return load_parsed_data(
+        "./data/14-nov/parsed_users.json",
+        exclude_cols={"description"},
+        limit=LIMIT,
+        cast_cols=cast_cols,
+        index_col="datastore_id",
     )
 
 
@@ -108,3 +135,37 @@ def create_crawled_terms_df(crawled_terms, tweet_df):
     )
 
     return crawled_terms_df
+
+
+@st.cache(allow_output_mutation=True)
+def most_common_hashtags(tweet_df, k=10):
+    counted_hashtags = Counter(
+        [
+            ("#" + hashtag.lower())
+            for hashtags in tweet_df["hashtags"]
+            for hashtag in hashtags
+        ]
+    )
+    return pd.DataFrame(
+        counted_hashtags.most_common(k), columns=["hashtag", "tweet count"]
+    )
+
+
+STOP_WORDS = STOP_WORDS.union({"pron", "", " ", "”", "“", "🇺"})
+
+
+def include_token(token):
+    return token not in STOP_WORDS and not token.startswith("hashtag")
+
+
+@st.cache(allow_output_mutation=True)
+def most_common_tokens(tweet_token_df, k=10):
+    counted_tokens = Counter(
+        [
+            token
+            for tokens in tweet_token_df["tokens"]
+            for token in tokens
+            if include_token(token)
+        ]
+    )
+    return pd.DataFrame(counted_tokens.most_common(k), columns=["token", "tweet count"])

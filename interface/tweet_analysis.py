@@ -8,15 +8,18 @@ from .utils import (
     lookup_parsed_tweet_data,
     load_df,
     load_tweet_df,
+    load_user_df,
+    most_common_hashtags,
+    most_common_tokens,
 )
 import numpy as np
 import seaborn as sns
 from collections import Counter
-from spacy.lang.en.stop_words import STOP_WORDS
 
 # Plot styles
 import matplotlib.style as style
 import json
+from collections import Counter
 
 style.use("seaborn-poster")
 style.use("ggplot")
@@ -24,27 +27,6 @@ style.use("ggplot")
 LIMIT = None
 
 CRAWLED_TERMS = load_crawled_terms("./keywords-3nov.txt")
-
-
-@st.cache()
-def most_common_hashtags(tweet_df, k=10):
-    counted_hashtags = Counter(
-        [('#' + hashtag.lower()) for hashtags in tweet_df["hashtags"] for hashtag in hashtags]
-    )
-    return pd.DataFrame(counted_hashtags.most_common(k), columns=["hashtag", "tweet count"])
-
-
-STOP_WORDS = STOP_WORDS.union({'pron', '', ' ', '”', '“'})
-
-def include_token(token):
-    return token not in STOP_WORDS and not token.startswith("hashtag")
-
-@st.cache()
-def most_common_tokens(tweet_token_df, k=10):
-    counted_tokens = Counter(
-        [token for tokens in tweet_token_df["tokens"] for token in tokens if include_token(token)]
-    )
-    return pd.DataFrame(counted_tokens.most_common(k), columns=["token", "tweet count"])
 
 
 def create_crawled_terms_df(crawled_terms, tweet_df):
@@ -64,32 +46,15 @@ def create_crawled_terms_df(crawled_terms, tweet_df):
     return crawled_terms_df
 
 
-def get_tweet_analysis_page():
+def get_tweet_analysis_page(shared_state):
     st.header("Tweet Analysis")
 
-    with st.spinner("Loading user data"):
-        user_df = load_df(
-            "./data/14-nov/parsed_users.json",
-            exclude_cols={"description"},
-            limit=LIMIT,
-        )
-
-    with st.spinner("Loading retweet data"):
-        retweet_df = load_df(
-            "./data/14-nov/parsed_retweets.json",
-            exclude_cols={"tokens", "cleaned_text", "text", "last_retweeted"},
-            limit=LIMIT,
-        )
-
-    with st.spinner("Loading tweet data"):
-        old_tweet_df, recent_tweet_df = load_tweet_df(
-            retweet_df.timestamp.min(), CRAWLED_TERMS
-        )
-
-    with st.spinner("Loading tweet tokens"):
-        tweet_tokens_df = load_df(
-            "./data/14-nov/parsed_tweets.json", include_cols={"tokens"}
-        )
+    user_df = shared_state.user_df
+    old_tweet_df = shared_state.old_tweet_df
+    recent_tweet_df = shared_state.recent_tweet_df
+    retweet_df = shared_state.retweet_df
+    crawled_terms_df = shared_state.crawled_terms_df
+    tweet_tokens_df = shared_state.tweet_tokens_df
 
     st.subheader("Basic stats")
     st.markdown(
@@ -127,7 +92,6 @@ def get_tweet_analysis_page():
     st.pyplot(plot_hourly_coverage(retweet_df, "Retweets"))
     st.pyplot(plot_hourly_coverage(recent_tweet_df, "Tweets since Oct 23rd"))
 
-
     col1, col2 = st.beta_columns(2)
     col1.subheader("Most common hashtags")
     col1.dataframe(most_common_hashtags(recent_tweet_df, 25))
@@ -137,7 +101,6 @@ def get_tweet_analysis_page():
 
     st.subheader("All crawled terms (since 3rd of November)")
 
-    crawled_terms_df = create_crawled_terms_df(CRAWLED_TERMS, recent_tweet_df)
     st.dataframe(crawled_terms_df)
 
     crawled_term_threshold = st.number_input(
@@ -205,67 +168,64 @@ def get_tweet_analysis_page():
     plt.xticks(rotation=45)
     st.pyplot(fig)
 
-    selected_crawled_term = st.selectbox("Select term", crawled_terms_df["term"].values)
+    # selected_crawled_term = st.selectbox("Select term", crawled_terms_df["term"].values)
 
-    filtered_by_crawled_term = recent_tweet_df[
-        recent_tweet_df[selected_crawled_term] == 1
-    ]
-    st.pyplot(plot_hourly_coverage(filtered_by_crawled_term, selected_crawled_term))
+    # filtered_by_crawled_term = recent_tweet_df[
+    #     recent_tweet_df[selected_crawled_term] == 1
+    # ]
+    # st.pyplot(plot_hourly_coverage(filtered_by_crawled_term, selected_crawled_term))
 
-    term_stats = (
-        recent_tweet_df[recent_tweet_df[selected_crawled_term] == 1][
-            ["retweet_count", "quote_count"]
-        ]
-        .fillna(0)
-        .astype(int)
-    )
-    top_retweeted = term_stats.nlargest(10, "retweet_count").sort_values(
-        "retweet_count", ascending=False
-    )
-    top_quoted = term_stats.nlargest(10, "quote_count").sort_values(
-        "quote_count", ascending=False
-    )
+    # term_stats = (
+    #     recent_tweet_df[recent_tweet_df[selected_crawled_term] == 1][
+    #         ["retweet_count", "quote_count"]
+    #     ]
+    #     .fillna(0)
+    #     .astype(int)
+    # )
+    # top_retweeted = term_stats.nlargest(10, "retweet_count").sort_values(
+    #     "retweet_count", ascending=False
+    # )
+    # top_quoted = term_stats.nlargest(10, "quote_count").sort_values(
+    #     "quote_count", ascending=False
+    # )
 
-    st.subheader("Top hashtags from '{}'".format(selected_crawled_term))
-    st.dataframe(most_common_hashtags(filtered_by_crawled_term, 15))
+    # st.subheader("Top hashtags for '{}'".format(selected_crawled_term))
+    # st.dataframe(most_common_hashtags(filtered_by_crawled_term, 15))
 
-    #st.subheader("Most common terms")
-    #st.dataframe(most_common_tokens(tweet_tokens_df, 10))
+    # st.subheader("10 randomly sampled tweets from '{}'".format(selected_crawled_term))
+    # st.table(
+    #     pd.DataFrame(
+    #         map(
+    #             lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
+    #             lookup_parsed_tweet_data(
+    #                 filtered_by_crawled_term.sample(n=10).index.values
+    #             ),
+    #         ),
+    #         columns=["text", "quote_count", "retweet_count"],
+    #     )
+    # )
 
-    st.subheader("10 randomly sampled tweets from '{}'".format(selected_crawled_term))
-    st.table(
-        pd.DataFrame(
-            map(
-                lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
-                lookup_parsed_tweet_data(
-                    filtered_by_crawled_term.sample(n=10).index.values
-                ),
-            ),
-            columns=["text", "quote_count", "retweet_count"],
-        )
-    )
+    # st.subheader("10 most retweeted tweets for '{}'".format(selected_crawled_term))
+    # st.table(
+    #     pd.DataFrame(
+    #         map(
+    #             lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
+    #             lookup_parsed_tweet_data(top_retweeted.index.values),
+    #         ),
+    #         columns=["text", "quote_count", "retweet_count"],
+    #     )
+    # )
 
-    st.subheader("10 most retweeted tweets for '{}'".format(selected_crawled_term))
-    st.table(
-        pd.DataFrame(
-            map(
-                lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
-                lookup_parsed_tweet_data(top_retweeted.index.values),
-            ),
-            columns=["text", "quote_count", "retweet_count"],
-        )
-    )
-
-    st.subheader("10 most quoted tweets for '{}'".format(selected_crawled_term))
-    st.table(
-        pd.DataFrame(
-            map(
-                lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
-                lookup_parsed_tweet_data(top_quoted.index.values),
-            ),
-            columns=["text", "quote_count", "retweet_count"],
-        )
-    )
+    # st.subheader("10 most quoted tweets for '{}'".format(selected_crawled_term))
+    # st.table(
+    #     pd.DataFrame(
+    #         map(
+    #             lambda t: [t["text"], t["quote_count"], t["retweet_count"]],
+    #             lookup_parsed_tweet_data(top_quoted.index.values),
+    #         ),
+    #         columns=["text", "quote_count", "retweet_count"],
+    #     )
+    # )
 
 
 if __name__ == "__main__":
