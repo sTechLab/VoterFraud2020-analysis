@@ -4,8 +4,9 @@ from bs4 import MarkupResemblesLocatorWarning
 
 warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
 
-crawled_terms = load_crawled_terms("./keywords-3nov.txt")
-lowered_crawled_terms = [term.lower() for term in crawled_terms]
+crawled_terms, crawled_hashtags, crawled_phrases = load_crawled_terms(
+    "./keywords-3nov.txt", split_hashtags=True
+)
 
 
 def parse_str_to_int(s):
@@ -13,11 +14,12 @@ def parse_str_to_int(s):
 
 
 def parse_tweet(tweet):
-    cleaned_text, tokens, hashtags, entities = tokenize_tweet(tweet["text"])
+    cleaned_text, tokens, hashtags, entities, urls = tokenize_tweet(tweet["text"])
     # tweet["cleaned_text"] = cleaned_text
     tweet["tokens"] = tokens
     tweet["hashtags"] = hashtags
     tweet["entities"] = entities
+    tweet["extracted_urls"] = urls
 
     tweet["retweet_count"] = parse_str_to_int(tweet["retweet_count"])
     if "quote_count" in tweet:
@@ -32,18 +34,20 @@ def parse_tweet(tweet):
     del tweet["processed"]
     del tweet["media"]
     del tweet["place"]
+    del tweet["urls"]
 
     lowered_tweet_text = tweet["text"].lower()
 
-    for term in lowered_crawled_terms:
-        if term[0] == "#":
-            lower_term_without_hashtag = term[1:]
-            for hashtag in tweet["hashtags"]:
-                if lower_term_without_hashtag == hashtag.lower():
-                    tweet[term] = 1
-                    break
-        elif term in lowered_tweet_text:
-            tweet[term] = 1
+    for hashtag in tweet["hashtags"]:
+        lowered_hashtag = hashtag.lower()
+        for crawled_hashtag in crawled_hashtags:
+            if lowered_hashtag == crawled_hashtag:
+                tweet["#" + crawled_hashtag] = 1
+
+    for phrase in crawled_phrases:
+        if phrase in lowered_tweet_text:
+            tweet[phrase] = 1
+
     return tweet
 
 

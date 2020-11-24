@@ -143,7 +143,7 @@ def load_parsed_data(
     return optimized_df
 
 
-def load_crawled_terms(filename, split_hashtags=True):
+def load_crawled_terms(filename, split_hashtags=False):
     if (split_hashtags):   
         crawled_terms = [] 
         crawled_hashtags = []

@@ -84,11 +84,12 @@ def doc2tokens(txt):
     parsed = parser(txt, disable=spacy_disabled_modules)
     tokens = list()
     entities = list()
+    urls = list()
 
     for token in parsed:
-        if token.lemma_ in PUNCTUATION:
-            continue
-        if token.lemma_ == "-PRON-":
+        if token.like_url:
+            urls.append(token.text)
+        elif token.lemma_ in PUNCTUATION or token.lemma_ == "-PRON-":
             continue
         else:
             tokens.append(escape_punct(token.lemma_.lower()).strip())
@@ -109,11 +110,10 @@ def doc2tokens(txt):
             }:
                 entities.append(ent.text)
 
-    return tokens, entities
+    return tokens, entities, urls
 
 
 RE_PATTERNS = {
-    "url": re.compile("http(.+)?(\W|$)"),
     "spacing": re.compile("[\n\r\t ]+"),
     "leading_mention": "^(\.?@\w+([^\w]|$))+",
     "mention": "@(\w+)",
@@ -127,7 +127,6 @@ def tokenize_tweet(x):
     unescape_html = (
         lambda x: BeautifulSoup(x, features="html.parser").get_text().strip()
     )
-    remove_urls = lambda x: re.sub(RE_PATTERNS["url"], " ", x)
 
     normalize_spaces = lambda x: re.sub(RE_PATTERNS["spacing"], " ", x)
 
@@ -137,13 +136,11 @@ def tokenize_tweet(x):
     encodeHashtag = lambda x: re.sub(RE_PATTERNS["hashtag"], "hashtag\g<1>", x)
 
     cleaned_text = encodeHashtag(
-        encodeMention(
-            remove_leading_mentions(normalize_spaces(remove_urls(unescape_html(x))))
-        )
+        encodeMention(remove_leading_mentions(normalize_spaces(unescape_html(x))))
     )
 
-    tokens, entities = doc2tokens(cleaned_text)
+    tokens, entities, urls = doc2tokens(cleaned_text)
     hashtags = re.findall(RE_PATTERNS["hashtag"], x)
 
-    return cleaned_text, tokens, hashtags, entities
+    return cleaned_text, tokens, hashtags, entities, urls
 
