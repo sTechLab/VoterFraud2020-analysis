@@ -143,14 +143,29 @@ def load_parsed_data(
     return optimized_df
 
 
-def load_crawled_terms(filename):
-    crawled_terms = []
-    with open(filename) as r:
-        for line in r:
-            crawled_terms.append(line.replace("\n", ""))
+def load_crawled_terms(filename, split_hashtags=True):
+    if (split_hashtags):   
+        crawled_terms = [] 
+        crawled_hashtags = []
+        crawled_phrases = []
+        with open(filename) as r:
+            for line in r:
+                lowered_term = line.replace("\n", "").lower()
+                crawled_terms.append(lowered_term)
+                if (lowered_term[0] == '#'):
+                    crawled_hashtags.append(lowered_term[1:])
+                else:
+                    crawled_phrases.append(lowered_term)
 
-    return crawled_terms
+        return crawled_terms, crawled_hashtags, crawled_phrases
 
+    else:    
+        crawled_terms = []
+        with open(filename) as r:
+            for line in r:
+                crawled_terms.append(line.replace("\n", "").lower())
+
+        return crawled_terms
 
 def lookup_parsed_data(filename, indices):
     counter = 0
