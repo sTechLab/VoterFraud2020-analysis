@@ -85,6 +85,7 @@ def load_tweet_df(recent_offset, crawled_terms):
             "processed",
             "media",
             "isDeleted",
+            "urls"
         },
         verbose=True,
         limit=LIMIT,
