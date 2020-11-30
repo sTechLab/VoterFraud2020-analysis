@@ -84,12 +84,9 @@ def doc2tokens(txt):
     parsed = parser(txt, disable=spacy_disabled_modules)
     tokens = list()
     entities = list()
-    urls = list()
 
     for token in parsed:
-        if token.like_url:
-            urls.append(token.text)
-        elif token.lemma_ in PUNCTUATION or token.lemma_ == "-PRON-":
+        if token.like_url or token.lemma_ in PUNCTUATION or token.lemma_ == "-PRON-":
             continue
         else:
             tokens.append(escape_punct(token.lemma_.lower()).strip())
@@ -110,7 +107,7 @@ def doc2tokens(txt):
             }:
                 entities.append(ent.text)
 
-    return tokens, entities, urls
+    return tokens, entities
 
 
 RE_PATTERNS = {
@@ -139,8 +136,8 @@ def tokenize_tweet(x):
         encodeMention(remove_leading_mentions(normalize_spaces(unescape_html(x))))
     )
 
-    tokens, entities, urls = doc2tokens(cleaned_text)
+    tokens, entities = doc2tokens(cleaned_text)
     hashtags = re.findall(RE_PATTERNS["hashtag"], x)
 
-    return cleaned_text, tokens, hashtags, entities, urls
+    return cleaned_text, tokens, hashtags, entities
 

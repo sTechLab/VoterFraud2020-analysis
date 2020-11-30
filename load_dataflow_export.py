@@ -14,12 +14,11 @@ def parse_str_to_int(s):
 
 
 def parse_tweet(tweet):
-    cleaned_text, tokens, hashtags, entities, urls = tokenize_tweet(tweet["text"])
+    cleaned_text, tokens, hashtags, entities = tokenize_tweet(tweet["text"])
     # tweet["cleaned_text"] = cleaned_text
     tweet["tokens"] = tokens
     tweet["hashtags"] = hashtags
     tweet["entities"] = entities
-    tweet["extracted_urls"] = urls
 
     tweet["retweet_count"] = parse_str_to_int(tweet["retweet_count"])
     if "quote_count" in tweet:
@@ -34,7 +33,6 @@ def parse_tweet(tweet):
     del tweet["processed"]
     del tweet["media"]
     del tweet["place"]
-    del tweet["urls"]
 
     lowered_tweet_text = tweet["text"].lower()
 
@@ -71,6 +69,6 @@ for data_source in data_sources:
     )
     parse_dataflow_export(
         data_directory,
-        "./data/{}/parsed_{}.json".format(EXPORT_TAG, data_type),
+        "./data/{}/test_2_parsed_{}.json".format(EXPORT_TAG, data_type),
         data_parser,
     )
