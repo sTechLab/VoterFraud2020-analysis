@@ -27,6 +27,11 @@ def load_tweet_df():
 
     return tweet_df, recent_tweet_df
 
+def load_media_df():
+    from data_tools import load_parsed_data
+
+    return load_parsed_data('../data/14-nov/parsed_media.json', verbose=True)
+
 def setup_styles():
     # Plot styles
     import matplotlib.style as style
