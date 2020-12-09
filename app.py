@@ -3,6 +3,7 @@ from interface.tweet_analysis import get_tweet_analysis_page
 from interface.crawled_term_analysis import get_crawled_term_analysis_page
 from interface.basic_stats import get_basic_stats_page
 from interface.user_analysis import get_user_analysis_page
+from interface.url_analysis import get_url_analysis_page
 from interface.utils import (
     load_user_df,
     load_df,
@@ -15,6 +16,7 @@ from data_tools import load_crawled_terms
 PAGES = {
     "Tweet Analysis": get_tweet_analysis_page,
     "User Analysis": get_user_analysis_page,
+    "URL Analysis": get_url_analysis_page,
     "Filter by crawled term": get_crawled_term_analysis_page,
 }
 
