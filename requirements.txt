@@ -12,3 +12,6 @@ spacy
 seaborn
 twarq
 tqdm
+networkx
+python-louvain
+import tldextract
