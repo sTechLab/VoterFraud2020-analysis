@@ -15,6 +15,7 @@ from .utils import (
 import numpy as np
 import seaborn as sns
 from collections import Counter
+from PIL import Image
 
 # Plot styles
 import matplotlib.style as style
@@ -70,6 +71,10 @@ def get_tweet_analysis_page(shared_state):
             len(user_df.index),
         )
     )
+
+    st.subheader("Infomap Clustering (on 200k retweets)")
+    infomap_img = Image.open('./interface/img/infomap-clustering.png')
+    st.image(infomap_img, use_column_width=True)
 
     st.subheader("Coverage")
     st.markdown(
