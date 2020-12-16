@@ -1,12 +1,10 @@
 import streamlit as st
 from interface.tweet_analysis import get_tweet_analysis_page
 from interface.crawled_term_analysis import get_crawled_term_analysis_page
-from interface.basic_stats import get_basic_stats_page
 from interface.user_analysis import get_user_analysis_page
 from interface.url_analysis import get_url_analysis_page
 from interface.utils import (
     load_user_df,
-    load_df,
     load_tweet_df,
     load_retweet_df,
     create_crawled_terms_df,

@@ -56,18 +56,6 @@ def lookup_parsed_tweet_data(indices):
 
 
 @st.cache(allow_output_mutation=True, persist=True)
-def load_df(filename, include_cols=None, exclude_cols={}, limit=None, index_col=None):
-    return load_parsed_data(
-        filename,
-        include_cols=include_cols,
-        exclude_cols=exclude_cols,
-        verbose=True,
-        limit=limit,
-        index_col=index_col,
-    )
-
-
-@st.cache(allow_output_mutation=True, persist=True)
 def load_tweet_df(recent_offset, crawled_terms):
     cast_cols = {"tweet_count": "int32", "quote_count": "int32"}
     for term in crawled_terms:
