@@ -1,15 +1,9 @@
 import streamlit as st
+import pandas as pd
 from interface.tweet_analysis import get_tweet_analysis_page
 from interface.crawled_term_analysis import get_crawled_term_analysis_page
 from interface.user_analysis import get_user_analysis_page
 from interface.url_analysis import get_url_analysis_page
-from interface.utils import (
-    load_user_df,
-    load_tweet_df,
-    load_retweet_df,
-    create_crawled_terms_df,
-)
-from data_tools import load_crawled_terms
 
 PAGES = {
     "Tweet Analysis": get_tweet_analysis_page,
@@ -19,8 +13,7 @@ PAGES = {
 }
 
 LIMIT = None
-CRAWLED_TERMS = load_crawled_terms("./keywords-3nov.txt")
-
+DATAFRAME_DIR = './data/dataframes/14-nov/'
 
 class SharedState:
     pass
@@ -32,20 +25,18 @@ def prepare_shared_state():
     state = SharedState()
 
     with st.spinner("Loading user data"):
-        state.user_df = load_user_df()
+        state.user_df = pd.read_pickle(DATAFRAME_DIR + 'df_users.pickle')
 
     with st.spinner("Loading retweet data"):
-        state.retweet_df = load_retweet_df()
+        state.retweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_retweets.pickle')
 
     with st.spinner("Loading tweet data"):
-        old_tweet_df, recent_tweet_df = load_tweet_df(
-            state.retweet_df.timestamp.min(), CRAWLED_TERMS
-        )
-
-        state.old_tweet_df = old_tweet_df
-        state.recent_tweet_df = recent_tweet_df
-
-    state.crawled_terms_df = create_crawled_terms_df(CRAWLED_TERMS, recent_tweet_df)
+        state.old_tweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_old_tweets.pickle')
+        state.recent_tweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_recent_tweets.pickle')
+    state.crawled_terms_df = pd.read_pickle(DATAFRAME_DIR + 'df_crawled_terms.pickle')
+    state.df_counts_by_hour = pd.read_pickle(DATAFRAME_DIR + 'df_counts_by_hour.pickle')
+    state.df_most_common_hashtags = pd.read_pickle(DATAFRAME_DIR + 'df_most_common_hashtags.pickle')
+    state.df_cooccurrence = pd.read_pickle(DATAFRAME_DIR + 'df_cooccurrence.pickle')
 
     return state
 

@@ -5,7 +5,6 @@ import matplotlib.dates as mdates
 import pandas as pd
 from .utils import (
     plot_hourly_coverage,
-    load_tweet_df,
     create_crawled_terms_df,
     lookup_parsed_tweet_data,
     most_common_hashtags,
@@ -31,40 +30,36 @@ def get_crawled_term_analysis_page(shared_state):
     recent_tweet_df = shared_state.recent_tweet_df
     retweet_df = shared_state.retweet_df
     crawled_terms_df = shared_state.crawled_terms_df
+    df_counts_by_hour = shared_state.df_counts_by_hour
+    df_most_common_hashtags = shared_state.df_most_common_hashtags
+    df_cooccurrence = shared_state.df_cooccurrence
 
     st.subheader("List of Crawled Terms (since 3rd of November)")
 
     st.dataframe(crawled_terms_df)
 
-    crawled_term_threshold = st.number_input(
-        "Exclude crawled terms under a certain threshold", value=5000, step=500
-    )
+    # crawled_term_threshold = st.number_input(
+    #     "Exclude crawled terms under a certain threshold", value=5000, step=500
+    # )
 
-    crawled_terms_df = crawled_terms_df[
-        crawled_terms_df["tweet count"] > crawled_term_threshold
-    ]
+    # crawled_terms_df = crawled_terms_df[
+    #     crawled_terms_df["tweet count"] > crawled_term_threshold
+    # ]
 
-    st.markdown(
-        "Filtered down to {} terms ({} in total)".format(
-            len(crawled_terms_df.index), len(CRAWLED_TERMS)
-        )
-    )
+    # st.markdown(
+    #     "Filtered down to {} terms ({} in total)".format(
+    #         len(crawled_terms_df.index), len(CRAWLED_TERMS)
+    #     )
+    # )
 
-    st.subheader("Co-occurrence matrix")
+    st.subheader("Co-occurrence matrix (for terms with count > 5000)")
 
-    terms_in_df = [term for term in crawled_terms_df["term"]]
-    crawled_terms_tweet_df = (
-        recent_tweet_df[terms_in_df].sparse.to_dense().astype("int32")
-    )
-    co_occurrence = crawled_terms_tweet_df.T.dot(crawled_terms_tweet_df)
-
-    st.dataframe(co_occurrence)
-
-    co_occurrence_diagonal = np.diagonal(co_occurrence)
+    st.dataframe(df_cooccurrence)
+    co_occurrence_diagonal = np.diagonal(df_cooccurrence)
 
     with np.errstate(divide="ignore", invalid="ignore"):
         co_occurrence_fraction = np.nan_to_num(
-            np.true_divide(co_occurrence, co_occurrence_diagonal[:, None])
+            np.true_divide(df_cooccurrence, co_occurrence_diagonal[:, None])
         )
 
     fig = plt.figure()
@@ -73,8 +68,8 @@ def get_crawled_term_analysis_page(shared_state):
     with st.echo():
         co_occurrence_heatmap_df = pd.DataFrame(
             np.log(co_occurrence_fraction),
-            index=co_occurrence.index,
-            columns=co_occurrence.columns,
+            index=df_cooccurrence.index,
+            columns=df_cooccurrence.columns,
         )
     np.fill_diagonal(co_occurrence_heatmap_df.values, np.nan)
     sns.heatmap(
@@ -107,7 +102,7 @@ def get_crawled_term_analysis_page(shared_state):
         filtered_by_crawled_term = recent_tweet_df[
             recent_tweet_df[selected_crawled_term] == 1
         ]
-        st.pyplot(plot_hourly_coverage(filtered_by_crawled_term, selected_crawled_term))
+        st.pyplot(plot_hourly_coverage(df_counts_by_hour, selected_crawled_term, selected_crawled_term))
 
     term_stats = (
         recent_tweet_df[recent_tweet_df[selected_crawled_term] == 1][
@@ -123,7 +118,7 @@ def get_crawled_term_analysis_page(shared_state):
         "quote_count", ascending=False
     )
     st.subheader("Top hashtags for '{}'".format(selected_crawled_term))
-    st.dataframe(most_common_hashtags(filtered_by_crawled_term, 15))
+    st.dataframe(most_common_hashtags(df_most_common_hashtags, selected_crawled_term, 15))
 
     st.subheader("10 randomly sampled tweets from '{}'".format(selected_crawled_term))
     st.table(

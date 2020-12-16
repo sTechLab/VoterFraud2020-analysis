@@ -4,11 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from collections import Counter
 import pandas as pd
-from .utils import (
-    plot_hourly_coverage,
-    load_tweet_df,
-    load_user_df    
-)
 import numpy as np
 
 # Plot styles
