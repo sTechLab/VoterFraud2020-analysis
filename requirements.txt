@@ -14,4 +14,4 @@ twarq
 tqdm
 networkx
 python-louvain
-import tldextract
+tldextract
