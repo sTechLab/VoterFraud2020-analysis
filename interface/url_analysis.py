@@ -17,8 +17,11 @@ style.use("ggplot")
 LIMIT = None
 
 
-def load_url_map(path):
-    with open("./notebooks/data_export/url_stats/{}.json".format(path)) as json_file:
+def load_url_map(path, selected_date):
+    directory = "./notebooks/data_export/url_stats/"
+    if (selected_date == '16-dec'):
+        directory += selected_date + '/'
+    with open("{}{}.json".format(directory, path)) as json_file:
         url_map = json.load(json_file)
         unique_tweet_ids = set()
 
@@ -62,7 +65,9 @@ def top_urls_by_retweet_count(url_map, N=10):
 def get_url_analysis_page(shared_state):
     st.header("URL Analysis")
 
-    url_map, url_stats = load_url_map("all_urls")
+    selected_date = shared_state.selected_date
+
+    url_map, url_stats = load_url_map("all_urls", selected_date)
 
     st.subheader("URL Stats")
     st.markdown(

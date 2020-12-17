@@ -5,6 +5,7 @@ import matplotlib.dates as mdates
 import pandas as pd
 from .utils import (
     plot_hourly_coverage,
+    plotly_hourly_coverage,
     lookup_parsed_tweet_data,
     get_most_common,
     create_crawled_terms_df,
@@ -74,10 +75,9 @@ def get_tweet_analysis_page(shared_state):
     )
 
     st.subheader("Hourly Coverage")
-    st.pyplot(plot_hourly_coverage(df_counts_by_hour, "retweet count", "Retweets"))
-    st.pyplot(
-        plot_hourly_coverage(df_counts_by_hour, "tweet count", "Tweets since Oct 23rd")
-    )
+    show_hourly_ticks = st.checkbox("Show hourly ticks")
+    st.plotly_chart(plotly_hourly_coverage(df_counts_by_hour, "retweet count", "Retweets", show_hourly_ticks))
+    st.plotly_chart(plotly_hourly_coverage(df_counts_by_hour, "tweet count", "Tweets since Oct 23rd", show_hourly_ticks))
 
     col1, col2 = st.beta_columns(2)
     col1.subheader("Most common hashtags")

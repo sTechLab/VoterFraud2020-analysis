@@ -54,6 +54,10 @@ DATAFRAME_DIR = './data/dataframes/14-nov/'
 def get_user_analysis_page(shared_state):
     st.header("User Analysis")
 
+    if (shared_state.selected_date != '14-dec'):
+        st.write("Currently disabled for this date range (work in progress)")
+        return
+
     with st.spinner("Loading retweet data"):
         retweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_retweets.pickle')
     

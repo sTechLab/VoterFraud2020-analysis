@@ -49,13 +49,13 @@ def parse_tweet(tweet):
     return tweet
 
 
-EXPORT_TAG = "14-nov"
+EXPORT_TAG = "16-dec"
 
 data_sources = [
-    # {"type": "retweets"},
-    # {"type": "users"},
-    # {"type": "media"},
-    # {"type": "hashtag"},
+    {"type": "retweets"},
+    {"type": "users"},
+    {"type": "media"},
+    #{"type": "hashtag"},
     {"type": "tweets", "parser": parse_tweet},
 ]
 
@@ -69,6 +69,6 @@ for data_source in data_sources:
     )
     parse_dataflow_export(
         data_directory,
-        "./data/{}/test_2_parsed_{}.json".format(EXPORT_TAG, data_type),
+        "./data/{}/parsed_{}.json".format(EXPORT_TAG, data_type),
         data_parser,
     )

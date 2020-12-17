@@ -14,10 +14,12 @@ PAGES = {
 }
 
 LIMIT = None
-DATAFRAME_DIR = './data/dataframes/14-nov/'
 
 class SharedState:
     pass
+
+selected_date = st.selectbox("Select dataset", ['14-nov', '16-dec'], index=1)
+DATAFRAME_DIR = './data/dataframes/{}/'.format(selected_date)
 
 
 @st.cache(allow_output_mutation=True)
@@ -41,6 +43,7 @@ def prepare_shared_state():
 
 
 shared_state = prepare_shared_state()
+shared_state.selected_date = selected_date
 
 st.sidebar.title("Navigation")
 selection = st.sidebar.radio("Go to", list(PAGES.keys()))

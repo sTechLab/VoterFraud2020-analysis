@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 from .utils import (
-    plot_hourly_coverage,
+    plotly_hourly_coverage,
     create_crawled_terms_df,
     lookup_parsed_tweet_data,
     get_most_common,
@@ -81,9 +81,8 @@ def get_crawled_term_analysis_page(shared_state):
 
     selected_crawled_term = st.selectbox("Select term", crawled_terms_df["term"].values)
 
-
-    st.pyplot(
-        plot_hourly_coverage(
+    st.plotly_chart(
+        plotly_hourly_coverage(
             df_counts_by_hour, selected_crawled_term, selected_crawled_term
         )
     )

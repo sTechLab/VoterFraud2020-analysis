@@ -6,36 +6,66 @@ import matplotlib.dates as mdates
 from data_tools import lookup_parsed_data, load_parsed_data
 from spacy.lang.en.stop_words import STOP_WORDS
 from collections import Counter
+import plotly.graph_objects as go
 
 LIMIT = None
 
 @st.cache(allow_output_mutation=True)
-def plot_hourly_coverage(df_counts_by_hour, col, title):
+def plot_hourly_coverage(df_counts_by_hour, col, title, show_hourly_ticks=False):
     data = df_counts_by_hour[col]
+    ticks = data.shape[0]
     rolling_average = data.rolling("12h").mean()
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(12, 6))
 
-    ax.plot(
-        data, label="Hourly", marker=".", linestyle="-", linewidth=0.5
-    )
+    if (show_hourly_ticks):
+        ax.plot(
+            data, label="Hourly", marker=".", linestyle="-", linewidth=0.5
+        )
+    
     ax.plot(
         rolling_average,
         marker=".",
         linestyle="-",
         label="12-Hour Rolling Mean",
+        color='darkblue'
     )
 
     ax.legend()
 
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%d/%m"))
     # mdates.HourLocator(interval = 12)
-    ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+    interval = int(ticks / 200)
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=interval))
 
     ax.set_title("Coverage for '{}' (total={:,})".format(title, data.sum()))
 
     return fig
 
+def plotly_hourly_coverage(df_counts_by_hour, col, title, show_hourly_ticks=False):
+    data = df_counts_by_hour[col]
+    ticks = data.shape[0]
+    rolling_average = data.rolling("12h").mean()
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(x=rolling_average.index, y=rolling_average.values, name="12-Hour Rolling Mean"),
+    )
+    if (show_hourly_ticks):
+        fig.add_trace(
+            go.Scatter(x=data.index, y=data.values, name="Hourly"),
+        )
+    fig.update_layout(
+        title="Coverage for '{}' (total={:,})".format(title, data.sum()),
+        xaxis_title='Date',
+        yaxis_title='Count',
+        legend=dict(
+            yanchor="top",
+            y=0.99,
+            xanchor="left",
+            x=0.01
+        )
+    )
+    return fig
 
 @st.cache
 def lookup_parsed_tweet_data(indices):
