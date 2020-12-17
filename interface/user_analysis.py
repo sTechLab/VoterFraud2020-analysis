@@ -49,13 +49,18 @@ def top_users_by_counts(
 def get_counts(df, key):
     return Counter(df[key])
 
+DATAFRAME_DIR = './data/dataframes/14-nov/'
+
 def get_user_analysis_page(shared_state):
     st.header("User Analysis")
 
+    with st.spinner("Loading retweet data"):
+        retweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_retweets.pickle')
+    
+    with st.spinner("Loading tweet data"):
+        recent_tweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_recent_tweets.pickle')
+
     user_df = shared_state.user_df
-    old_tweet_df = shared_state.old_tweet_df
-    recent_tweet_df = shared_state.recent_tweet_df
-    retweet_df = shared_state.retweet_df
 
     st.header("Prominent users among all tweets")
     only_verified_users = st.checkbox("Only count verified users", value=True)

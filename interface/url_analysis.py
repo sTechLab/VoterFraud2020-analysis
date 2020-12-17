@@ -64,8 +64,6 @@ def get_url_analysis_page(shared_state):
 
     url_map, url_stats = load_url_map("all_urls")
 
-    recent_tweet_df = shared_state.recent_tweet_df
-
     st.subheader("URL Stats")
     st.markdown(
         """

@@ -59,25 +59,5 @@ def create_crawled_terms_df(crawled_terms, tweet_df):
     return crawled_terms_df
 
 
-def most_common_hashtags(df_most_common_hashtags, col, k=10):
-    return df_most_common_hashtags[col].nlargest(k)
-
-
-STOP_WORDS = STOP_WORDS.union({"pron", "", " ", "”", "“", "🇺"})
-
-
-def include_token(token):
-    return token not in STOP_WORDS and not token.startswith("hashtag")
-
-
-@st.cache(allow_output_mutation=True)
-def most_common_tokens(tweet_token_df, k=10):
-    counted_tokens = Counter(
-        [
-            token
-            for tokens in tweet_token_df["tokens"]
-            for token in tokens
-            if include_token(token)
-        ]
-    )
-    return pd.DataFrame(counted_tokens.most_common(k), columns=["token", "tweet count"])
+def get_most_common(df_most_common, col, k=10):
+    return df_most_common[col].nlargest(k)

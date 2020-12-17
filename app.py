@@ -4,6 +4,7 @@ from interface.tweet_analysis import get_tweet_analysis_page
 from interface.crawled_term_analysis import get_crawled_term_analysis_page
 from interface.user_analysis import get_user_analysis_page
 from interface.url_analysis import get_url_analysis_page
+import pickle
 
 PAGES = {
     "Tweet Analysis": get_tweet_analysis_page,
@@ -27,17 +28,15 @@ def prepare_shared_state():
     with st.spinner("Loading user data"):
         state.user_df = pd.read_pickle(DATAFRAME_DIR + 'df_users.pickle')
 
-    with st.spinner("Loading retweet data"):
-        state.retweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_retweets.pickle')
-
-    with st.spinner("Loading tweet data"):
-        state.old_tweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_old_tweets.pickle')
-        state.recent_tweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_recent_tweets.pickle')
     state.crawled_terms_df = pd.read_pickle(DATAFRAME_DIR + 'df_crawled_terms.pickle')
     state.df_counts_by_hour = pd.read_pickle(DATAFRAME_DIR + 'df_counts_by_hour.pickle')
     state.df_most_common_hashtags = pd.read_pickle(DATAFRAME_DIR + 'df_most_common_hashtags.pickle')
+    state.df_most_common_tokens = pd.read_pickle(DATAFRAME_DIR + 'df_most_common_tokens.pickle')
     state.df_cooccurrence = pd.read_pickle(DATAFRAME_DIR + 'df_cooccurrence.pickle')
 
+    with open(DATAFRAME_DIR + "coverage_stats.pickle", "rb") as f:
+        state.coverage_stats = pickle.load(f)
+    print("Shared State Loaded")
     return state
 
 
