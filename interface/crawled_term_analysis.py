@@ -96,7 +96,7 @@ def get_crawled_term_analysis_page(shared_state):
 
     st.subheader("--Temporarily Disabled--")
     st.subheader("10 randomly sampled tweets from '{}'".format(selected_crawled_term))
-    
+
     # term_stats = (
     #     recent_tweet_df[recent_tweet_df[selected_crawled_term] == 1][
     #         ["retweet_count", "quote_count"]

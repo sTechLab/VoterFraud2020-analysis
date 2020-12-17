@@ -19,8 +19,8 @@ LIMIT = None
 
 def load_url_map(path, selected_date):
     directory = "./notebooks/data_export/url_stats/"
-    if (selected_date == '16-dec'):
-        directory += selected_date + '/'
+    if selected_date == "16-dec":
+        directory += selected_date + "/"
     with open("{}{}.json".format(directory, path)) as json_file:
         url_map = json.load(json_file)
         unique_tweet_ids = set()
@@ -87,12 +87,12 @@ def get_url_analysis_page(shared_state):
     st.subheader("Top URLs by retweet count")
     st.table(top_urls_by_retweet_count(url_map))
 
-    youtube_url_map, _ = load_url_map("youtube_urls")
+    youtube_url_map, _ = load_url_map("youtube_urls", selected_date)
     st.subheader("Top Youtube URLs by retweet count")
     st.write("Youtube URLs in the dataset: {:,}".format(len(youtube_url_map.keys())))
     st.table(top_urls_by_retweet_count(youtube_url_map))
 
-    domain_url_map, _ = load_url_map("domains")
+    domain_url_map, _ = load_url_map("domains", selected_date)
     st.subheader("Top domains by retweet count")
     st.write("Domains in the dataset: {:,}".format(len(domain_url_map.keys())))
     st.table(top_urls_by_retweet_count(domain_url_map))

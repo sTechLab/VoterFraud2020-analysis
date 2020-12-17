@@ -15,6 +15,7 @@ style.use("ggplot")
 
 LIMIT = None
 
+
 @st.cache(allow_output_mutation=True)
 def top_users_by_followers(user_df, k=10, only_verified=None):
     if only_verified:
@@ -45,24 +46,27 @@ def top_users_by_counts(
                 break
     return pd.DataFrame(top_users).set_index("user_id")
 
+
 @st.cache(allow_output_mutation=True)
 def get_counts(df, key):
     return Counter(df[key])
 
-DATAFRAME_DIR = './data/dataframes/14-nov/'
+
+DATAFRAME_DIR = "./data/dataframes/14-nov/"
+
 
 def get_user_analysis_page(shared_state):
     st.header("User Analysis")
 
-    if (shared_state.selected_date != '14-dec'):
+    if shared_state.selected_date != "14-dec":
         st.write("Currently disabled for this date range (work in progress)")
         return
 
     with st.spinner("Loading retweet data"):
-        retweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_retweets.pickle')
-    
+        retweet_df = pd.read_pickle(DATAFRAME_DIR + "df_retweets.pickle")
+
     with st.spinner("Loading tweet data"):
-        recent_tweet_df = pd.read_pickle(DATAFRAME_DIR + 'df_recent_tweets.pickle')
+        recent_tweet_df = pd.read_pickle(DATAFRAME_DIR + "df_recent_tweets.pickle")
 
     user_df = shared_state.user_df
 
@@ -91,6 +95,7 @@ def get_user_analysis_page(shared_state):
             only_verified=only_verified_users,
         )
     )
+
 
 if __name__ == "__main__":
     get_user_analysis_page()

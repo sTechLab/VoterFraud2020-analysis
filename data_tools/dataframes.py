@@ -56,6 +56,7 @@ def create_user_df(data_dir="../data/14-nov/"):
         index_col="datastore_id",
     )
 
+
 def create_crawled_terms_df(crawled_terms, tweet_df):
     crawled_terms_stats = []
 
@@ -72,6 +73,7 @@ def create_crawled_terms_df(crawled_terms, tweet_df):
 
     return crawled_terms_df
 
+
 def group_df_by_hour(df, count_label="count", column="timestamp"):
     grouped_by_hour = (
         pd.to_datetime(df[column])
@@ -82,17 +84,19 @@ def group_df_by_hour(df, count_label="count", column="timestamp"):
     ).sort_values(by=["date"])
     return grouped_by_hour.set_index("date").fillna(0)
 
+
 def aggregate_counts_by_hour(recent_tweet_df, retweet_df, crawled_terms):
     aggregated_by_hour = group_df_by_hour(recent_tweet_df, count_label="tweet count")
     retweet_by_hour = group_df_by_hour(retweet_df, count_label="retweet count")
     aggregated_by_hour = aggregated_by_hour.join(retweet_by_hour)
     for term in crawled_terms:
-        filtered_by_crawled_term = recent_tweet_df[
-            recent_tweet_df[term] == 1
-        ]
-        term_grouped_by_hour = group_df_by_hour(filtered_by_crawled_term, count_label=term)
+        filtered_by_crawled_term = recent_tweet_df[recent_tweet_df[term] == 1]
+        term_grouped_by_hour = group_df_by_hour(
+            filtered_by_crawled_term, count_label=term
+        )
         aggregated_by_hour = aggregated_by_hour.join(term_grouped_by_hour)
     return aggregated_by_hour.fillna(0)
+
 
 def create_most_common_hashtags_df(df_tweets, count_label, k=100):
     counted_hashtags = Counter(
@@ -106,14 +110,34 @@ def create_most_common_hashtags_df(df_tweets, count_label, k=100):
         counted_hashtags.most_common(k), columns=["hashtag", count_label]
     ).set_index("hashtag")
 
+
 def aggregate_most_common_hashtags(df_tweets, crawled_terms, k=100):
-    df_most_common_hashtags = create_most_common_hashtags_df(df_tweets, count_label="all tweets", k=k)
+    df_most_common_hashtags = create_most_common_hashtags_df(
+        df_tweets, count_label="all tweets", k=k
+    )
     for term in crawled_terms:
-        filtered_by_crawled_term = df_tweets[
-            df_tweets[term] == 1
-        ]
+        filtered_by_crawled_term = df_tweets[df_tweets[term] == 1]
         df_most_common_hashtags = df_most_common_hashtags.join(
-            create_most_common_hashtags_df(filtered_by_crawled_term, count_label=term, k=k),
-            how='outer'
+            create_most_common_hashtags_df(
+                filtered_by_crawled_term, count_label=term, k=k
+            ),
+            how="outer",
         )
     return df_most_common_hashtags.fillna(0).astype(int)
+
+
+def create_media_df(tweet_df, data_dir="../data/14-nov/"):
+    tweet_df_with_media = tweet_df[tweet_df["hasMedia"] == True].set_index(
+        "datastore_id"
+    )
+    col_types = tweet_df_with_media.select_dtypes(include=["int", "int32"]).dtypes
+    media_df = (
+        load_parsed_data(data_dir + "/parsed_media.json",)
+        .drop_duplicates("media_id")
+        .set_index("tweet_id")
+    )
+    df_media_with_tweets = media_df.join(tweet_df_with_media, on="tweet_id")
+    for col, col_type in col_types.iteritems():
+        df_media_with_tweets[col] = df_media_with_tweets[col].fillna(0).astype(col_type)
+
+    return df_media_with_tweets
