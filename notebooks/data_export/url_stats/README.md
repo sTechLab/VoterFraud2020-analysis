@@ -1,8 +1,7 @@
 # Readme
-### Files
-- [./all_urls.json](all_urls.json)
-- [./domains.json](domains.json)
-- [./youtube_urls.json](youtube_urls.json)
+### Collected URLs
+- [14 Nov dump (Oct 23rd - Nov 14th)](./14-nov/)
+- [16 Dec dump (Oct 23rd - Dec 16th)](./16-dec/)
 
 ### Data format
 Key, value JSON map where key is one of the following (depending on the file): 
@@ -15,11 +14,12 @@ The value consists of:
 - **aggregated_retweet_count**: summed retweet_count of the tweet id’s retweet count metadata field
 - **aggregated_quote_count**: summed quote_count of the tweet id’s retweet count metadata field
 
+
 Some normalizing of the key has been done to merge duplicate entries (see [the notebook](/notebooks/media_analysis.ipynb) for reference)
 
 ### expanded_url_map
 
-**[expanded_url_map.json](./expanded_url_map.json)** contains **all_urls.json** with URLs expanded to their "final" destination using [this script](/scripts/expand_urls.py).
+**expanded_url_map.json** contains **all_urls.json** with URLs expanded to their "final" destination using [this script](/scripts/expand_urls.py).
 
 *Example entries:*
 ```json

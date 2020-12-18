@@ -18,9 +18,7 @@ LIMIT = None
 
 
 def load_url_map(path, selected_date):
-    directory = "./notebooks/data_export/url_stats/"
-    if selected_date == "16-dec":
-        directory += selected_date + "/"
+    directory = "./notebooks/data_export/url_stats/{}/".format(selected_date)
     with open("{}{}.json".format(directory, path)) as json_file:
         url_map = json.load(json_file)
         unique_tweet_ids = set()
