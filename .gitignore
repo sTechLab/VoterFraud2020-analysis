@@ -1,5 +1,6 @@
 .env
 private
+private/
 bucket-export/*
 data/*
 __pycache__
