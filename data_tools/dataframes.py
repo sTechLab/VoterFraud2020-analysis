@@ -25,7 +25,6 @@ def create_tweet_df(recent_offset, crawled_terms, data_dir="../data/14-nov/"):
             "replyTo",
             "replyTo_user",
             "cleaned_text",
-            "text",
             "last_retweeted",
             "place",
             "processed",
