@@ -38,41 +38,29 @@ def get_tweet_analysis_page(shared_state):
     df_cooccurrence = shared_state.df_cooccurrence
     coverage_stats = shared_state.coverage_stats
 
-    st.subheader("Basic stats")
+    st.subheader("Basic stats & Coverage")
+    start_time = pd.to_datetime(min(coverage_stats["earliest_tweet"], coverage_stats["earliest_retweet"]))
+    end_time = pd.to_datetime(max(coverage_stats["latest_tweet"], coverage_stats["latest_retweet"]))
     st.markdown(
         """
-        **Number of tweets:** {:,}  
-        **Number of tweets after October 23rd:** {:,}  
+        **Timespan:** {} to {}  
+        **Number of tweets (excluding quote tweets):** {:,}  
+        **Number of quote tweets:** {:,}  
         **Number of retweets:** {:,}  
         **Number of users:** {:,}
 
     """.format(
-            coverage_stats["total_tweet_count"],
-            coverage_stats["recent_tweet_count"],
+            start_time.strftime('%Y-%m-%d %H:%M'),
+            end_time.strftime('%Y-%m-%d %H:%M'),
+            coverage_stats["recent_tweet_count"] - coverage_stats["quote_tweet_count"],
+            coverage_stats["quote_tweet_count"],
             coverage_stats["retweet_count"],
             coverage_stats["user_count"],
         )
     )
-
     st.subheader("Infomap Clustering (on 200k retweets)")
     infomap_img = Image.open("./interface/img/infomap-clustering.png")
     st.image(infomap_img, use_column_width=True)
-
-    st.subheader("Coverage")
-    st.markdown(
-        """
-        **Earliest tweet:** {}  
-        **Latest tweet:** {}  
-        **Earliest retweet:** {}  
-        **Latest retweet:** {}  
-
-    """.format(
-            coverage_stats["earliest_tweet"],
-            coverage_stats["latest_tweet"],
-            coverage_stats["earliest_retweet"],
-            coverage_stats["latest_retweet"],
-        )
-    )
 
     st.subheader("Hourly Coverage")
     show_hourly_ticks = st.checkbox("Show hourly ticks")
