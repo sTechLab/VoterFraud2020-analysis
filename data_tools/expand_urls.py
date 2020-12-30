@@ -12,6 +12,14 @@ from urllib.parse import urlparse
 import json
 import numpy as np
 import signal
+import sys
+
+
+try:
+    DATE = sys.argv[1]
+except:
+    print("Supply date (14-nov or 16-dec) as a command line argument")
+    exit()
 
 
 def timeout(func, args=(), kwargs={}, timeout_duration=1, default=None):
@@ -70,7 +78,7 @@ def resolve_url(url):
 
 
 with open(
-    "./notebooks/data_export/url_stats/all_urls.json", "r", encoding="utf-8"
+    "./notebooks/data_export/url_stats/{}/all_urls.json".format(DATE), "r", encoding="utf-8"
 ) as f:
     url_map = json.load(f)
 
@@ -93,7 +101,7 @@ def expand_url_map(url_map, limit=None):
 
 def process_urls(urls):
     current_worker = multiprocessing.current_process().name
-    filename = "./data/expanded_urls/run-2/{}.json".format(current_worker)
+    filename = "./data/expanded_urls/{}/{}.json".format(DATE, current_worker)
     print("I'm {}. processing {} urls".format(current_worker, len(urls)))
     try:
         with open(filename, "r") as f:

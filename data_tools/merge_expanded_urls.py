@@ -2,7 +2,13 @@ import os
 import json
 import tldextract
 
-directory = "./data/expanded_urls/run-2/"
+try:
+    DATE = sys.argv[1]
+except:
+    print("Supply date (14-nov or 16-dec) as a command line argument")
+    exit()
+
+directory = "./data/expanded_urls/{}/".format(DATE)
 merged_url_map = {}
 expanded_urls = set()
 total = 0
