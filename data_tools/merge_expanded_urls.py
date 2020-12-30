@@ -1,6 +1,7 @@
 import os
 import json
 import tldextract
+import sys
 
 try:
     DATE = sys.argv[1]
