@@ -125,15 +125,16 @@ def aggregate_most_common_hashtags(df_tweets, crawled_terms, k=100):
     return df_most_common_hashtags.fillna(0).astype(int)
 
 
-def create_media_df(tweet_df, data_dir="../data/14-nov/"):
+def create_media_df(tweet_df, data_dir):
     tweet_df_with_media = tweet_df[tweet_df["hasMedia"] == True].set_index(
         "datastore_id"
     )
+    # Preserve types when joining
     col_types = tweet_df_with_media.select_dtypes(include=["int", "int32"]).dtypes
     media_df = (
         load_parsed_data(data_dir + "/parsed_media.json",)
-        .drop_duplicates("media_id")
-        .set_index("tweet_id")
+        .set_index("datastore_id")
+        .drop_duplicates(["media_id", "tweet_id"])
     )
     df_media_with_tweets = media_df.join(tweet_df_with_media, on="tweet_id")
     for col, col_type in col_types.iteritems():
