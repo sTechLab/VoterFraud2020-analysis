@@ -86,8 +86,12 @@ def group_df_by_hour(df, count_label="count", column="timestamp"):
 
 def aggregate_counts_by_hour(recent_tweet_df, retweet_df, crawled_terms):
     aggregated_by_hour = group_df_by_hour(recent_tweet_df, count_label="tweet count")
+    quote_tweets = recent_tweet_df[recent_tweet_df["quote_tweet"].notna()]
+    original_tweets = recent_tweet_df[recent_tweet_df["quote_tweet"].isna()]
     retweet_by_hour = group_df_by_hour(retweet_df, count_label="retweet count")
-    aggregated_by_hour = aggregated_by_hour.join(retweet_by_hour)
+    original_by_hour = group_df_by_hour(original_tweets, count_label="original tweet count")
+    quotes_by_hour = group_df_by_hour(quote_tweets, count_label="quote tweet count")
+    aggregated_by_hour = aggregated_by_hour.join(retweet_by_hour).join(original_by_hour).join(quotes_by_hour)
     for term in crawled_terms:
         filtered_by_crawled_term = recent_tweet_df[recent_tweet_df[term] == 1]
         term_grouped_by_hour = group_df_by_hour(
@@ -95,7 +99,6 @@ def aggregate_counts_by_hour(recent_tweet_df, retweet_df, crawled_terms):
         )
         aggregated_by_hour = aggregated_by_hour.join(term_grouped_by_hour)
     return aggregated_by_hour.fillna(0)
-
 
 def create_most_common_hashtags_df(df_tweets, count_label, k=100):
     counted_hashtags = Counter(
@@ -125,18 +128,20 @@ def aggregate_most_common_hashtags(df_tweets, crawled_terms, k=100):
     return df_most_common_hashtags.fillna(0).astype(int)
 
 
-def create_media_df(tweet_df, data_dir):
-    tweet_df_with_media = tweet_df[tweet_df["hasMedia"] == True].set_index(
+def create_media_df(df_tweets, data_dir):
+    df_tweets_media = df_tweets[df_tweets["hasMedia"] == True].set_index(
         "datastore_id"
     )
     # Preserve types when joining
-    col_types = tweet_df_with_media.select_dtypes(include=["int", "int32"]).dtypes
-    media_df = (
+    col_types = df_tweets_media.select_dtypes(include=["int", "int32"]).dtypes
+    
+    df_media = (
         load_parsed_data(data_dir + "/parsed_media.json",)
         .set_index("datastore_id")
-        .drop_duplicates(["media_id", "tweet_id"])
+        .drop_duplicates(["media_id", "tweet_id", "media_url"])
     )
-    df_media_with_tweets = media_df.join(tweet_df_with_media, on="tweet_id")
+    
+    df_media_with_tweets = df_media.join(df_tweets_media, on="tweet_id", how="right")
     for col, col_type in col_types.iteritems():
         df_media_with_tweets[col] = df_media_with_tweets[col].fillna(0).astype(col_type)
 

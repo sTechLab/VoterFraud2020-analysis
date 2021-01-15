@@ -49,14 +49,14 @@ def parse_tweet(tweet):
     return tweet
 
 
-EXPORT_TAG = "16-dec"
+EXPORT_TAG = "05-jan"
 
 data_sources = [
-    {"type": "retweets"},
-    {"type": "users"},
+    # {"type": "retweets"},
+    # {"type": "users"},
     {"type": "media"},
     #{"type": "hashtag"},
-    {"type": "tweets", "parser": parse_tweet},
+    # {"type": "tweets", "parser": parse_tweet},
 ]
 
 
