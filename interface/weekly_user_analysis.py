@@ -45,7 +45,7 @@ def get_weekly_user_analysis_page(shared_state):
         "verified",
     ]
     col1, col2 = st.beta_columns(2)
-    top_n = col1.number_input("Show top N users", value=5)
+    top_n = max(col1.number_input("Show top N users (limited to 25)", value=5), 25)
     sort_column = col2.selectbox(
         "Sort by column",
         [
