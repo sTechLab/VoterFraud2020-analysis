@@ -6,4 +6,6 @@ data/*
 __pycache__
 *.DS_Store
 twarc.log
-notebook/.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+notebooks/*.pickle
+notebooks/*.csv
