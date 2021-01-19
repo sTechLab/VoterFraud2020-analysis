@@ -79,7 +79,8 @@ def get_content_dataframe(selected_cluster, selected_content, selected_method):
         elif selected_content == "Top Youtube Videos":
             df_top_videos = pd.read_pickle("./interface/data/top_youtube_videos.pickle")
             df_top_videos["video_url"] = df_top_videos.apply(lambda x: "http://youtu.be/" + x.name, axis=1)
-            df_table = df_top_videos.nlargest(10, column)[["video_url", "channel_title", column]]
+            df_top_videos["channel_url"] = df_top_videos.apply(lambda x: "http://youtube.com/channel/" + x["channel_id"], axis=1)
+            df_table = df_top_videos.nlargest(10, column)[["video_url", "channel_title", "channel_url", column]]
             df_table.index = [""] * len(df_table)
             return df_table
         
