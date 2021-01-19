@@ -15,6 +15,8 @@ def get_top_image_analysis_page(shared_state):
         
         After grouping images by the same pHash value (a perceptual hash value), we present the top 10 images that have been retweeted in each cluster.
         We also include the total number of tweets in the dataset that shared the image, and the total number of retweets as they appear in metadata.
+        
+        We present the same analysis for users from the suspended set, i.e. the most retweeted images by users that were suspended from Twitter.
 
     """.format(
             coverage_stats["recent_tweet_count"] - coverage_stats["quote_tweet_count"],
