@@ -43,13 +43,14 @@ def get_landing_page(shared_state):
         The paper, dataset, and the initial analysis provided here is a collaboration between the 
         [Social Technologies Lab](https://s.tech.cornell.edu/) at Cornell Tech and Technion. Inquiries should go to Professor Mor Naaman at [mor.naaman@cornell.edu](mailto:mor.naaman@cornell.edu).
 
-        *Anton Abilov, Yiqing Hua, Hana Matatov, Ofra Amir & Mor Naaman.*
-
         ### Key Takeaways
         - Community detection performed on the dataset reveals that there are 5 sub-communities involved in the discussion. 
         The dataset is enhanced with community labels to enable quick study of how URLs, images and youtube videos spread within these sub-communities.
         - 99,884 suspended users are labeled in the dataset, allowing the investigation of [Twitter's response](https://blog.twitter.com/en_us/topics/company/2021/protecting--the-conversation-following-the-riots-in-washington--.html) to voter fraud claims.
         Preliminary analyses show that Twitter’s ban actions mostly affected a specific community of voter fraud claim promoters.
+
+
+        *Anton Abilov, Yiqing Hua, Hana Matatov, Ofra Amir & Mor Naaman.*
 
     """.format(
             coverage_stats["recent_tweet_count"] - coverage_stats["quote_tweet_count"],

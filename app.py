@@ -5,8 +5,8 @@ import pandas as pd
 # from interface.url_analysis import get_url_analysis_page
 
 # from interface.crawled_term_analysis import get_crawled_term_analysis_page
-#from interface.weekly_user_analysis import get_weekly_user_analysis_page
-#from interface.weekly_tweet_analysis import get_weekly_tweet_analysis_page
+# from interface.weekly_user_analysis import get_weekly_user_analysis_page
+# from interface.weekly_tweet_analysis import get_weekly_tweet_analysis_page
 from interface.landing_page import get_landing_page
 from interface.retweet_graph_analysis import get_retweet_graph_analysis_page
 from interface.top_image_analysis import get_top_image_analysis_page
@@ -33,8 +33,8 @@ PAGES = {
     "Explore The Dataset": get_explore_data_page,
     "Top Images": get_top_image_analysis_page,
     # "Overview": get_tweet_analysis_page,
-    #"Top Tweets": get_weekly_tweet_analysis_page,
-    #"Top Users": get_weekly_user_analysis_page,
+    # "Top Tweets": get_weekly_tweet_analysis_page,
+    # "Top Users": get_weekly_user_analysis_page,
     # "URL Analysis": get_url_analysis_page,
     # "Filter by crawled term": get_crawled_term_analysis_page,
 }
@@ -84,7 +84,7 @@ def prepare_shared_state():
 
 
 def get_selected_page_index():
-    #query_params = st.experimental_get_query_params()
+    # query_params = st.experimental_get_query_params()
     if "page" in app_state:
         if "page" in first_query_params:
             selected_page = first_query_params["page"][0]
@@ -98,25 +98,29 @@ shared_state.selected_date = selected_date
 
 st.sidebar.title("Navigation")
 
-selection = st.sidebar.radio(
-    "Go to", PAGE_OPTIONS, index=get_selected_page_index()
-)
+selection = st.sidebar.radio("Go to", PAGE_OPTIONS, index=get_selected_page_index())
 
-st.sidebar.markdown("""
+st.sidebar.markdown(
+    """
     - [The Paper (PDF)]()
 
     ### Download The Dataset
     - [Github Repository](https://github.com/sTechLab/VoterFraud2020)  
     - [Fighshare](https://doi.org/10.6084/m9.figshare.13571084)
-""")
+"""
+)
 
-# if (PAGE_OPTIONS.index(selection) == 0):
-#     if ("page" in app_state):
-#         del app_state["page"]
-# else:
 app_state["page"] = selection
 
-st.experimental_set_query_params(**app_state)
+
+def get_query_params():
+    if PAGE_OPTIONS.index(selection) == 0:
+        return {}
+    else:
+        return {"page": app_state["page"]}
+
+
+st.experimental_set_query_params(**get_query_params())
 
 page = PAGES[selection]
 page(shared_state)
