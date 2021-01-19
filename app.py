@@ -1,12 +1,6 @@
 import streamlit as st
 import pandas as pd
-
-# from interface.tweet_analysis import get_tweet_analysis_page
-# from interface.url_analysis import get_url_analysis_page
-
-# from interface.crawled_term_analysis import get_crawled_term_analysis_page
-# from interface.weekly_user_analysis import get_weekly_user_analysis_page
-# from interface.weekly_tweet_analysis import get_weekly_tweet_analysis_page
+import os, re
 from interface.landing_page import get_landing_page
 from interface.retweet_graph_analysis import get_retweet_graph_analysis_page
 from interface.top_image_analysis import get_top_image_analysis_page
@@ -14,6 +8,32 @@ from interface.explore_data import get_explore_data_page
 import interface.SessionState as SessionState
 from interface.df_utils import load_pickled_df
 import pickle5 as pickle
+
+## Google analytics
+
+google_analytics_snippet = """
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8VB4WZRD7C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8VB4WZRD7C');
+</script>
+"""
+
+a = os.path.dirname(st.__file__) + "/static/index.html"
+with open(a, "r") as f:
+    data = f.read()
+    if len(re.findall("G-8VB4WZRD7C", data)) == 0:
+        print("Inserting Google Analytics Tag")
+        with open(a, "w") as ff:
+            new_data = re.sub("<head>", "<head>" + google_analytics_snippet, data)
+            ff.write(new_data)
+    else:
+        print("Google Analytics Tag already inserted")
+
 
 query_params = st.experimental_get_query_params()
 app_state = st.experimental_get_query_params()
@@ -60,8 +80,10 @@ def prepare_shared_state():
     #    state.user_df = pd.read_pickle(DATAFRAME_DIR + "df_users.pickle")
 
     # state.crawled_terms_df = pd.read_pickle(DATAFRAME_DIR + "df_crawled_terms.pickle")
-    
-    state.df_counts_by_hour = load_pickled_df(DATAFRAME_DIR + "df_counts_by_hour.pickle")
+
+    state.df_counts_by_hour = load_pickled_df(
+        DATAFRAME_DIR + "df_counts_by_hour.pickle"
+    )
     # state.df_most_common_hashtags = pd.read_pickle(
     #     DATAFRAME_DIR + "df_most_common_hashtags.pickle"
     # )
@@ -123,3 +145,4 @@ st.experimental_set_query_params(**get_query_params())
 
 page = PAGES[selection]
 page(shared_state)
+
