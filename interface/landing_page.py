@@ -40,7 +40,7 @@ def get_landing_page(shared_state):
         four communities that seem to promote such claims (*"promoters"*) and one community of *"detractors"* (blue in Figure 1 on this page).
         - The dataset is enhanced with community labels to enable quick study of how URLs, images and youtube videos spread within these sub-communities.
         The navigation on this page provides a quick summary of the top users, tweets, videos and links shared.
-        - We identified 99,884 suspended users, allowing the investigation of [Twitter's response](https://blog.twitter.com/en_us/topics/company/2021/protecting--the-conversation-following-the-riots-in-washington--.html) to voter fraud claims.
+        - Our data identifies 99,884 suspended users, allowing researchers to investigate [Twitter's response](https://blog.twitter.com/en_us/topics/company/2021/protecting--the-conversation-following-the-riots-in-washington--.html) to voter fraud claims.
         Preliminary analyses show that Twitter’s ban actions mostly affected a specific community within the cluster of voter fraud claim promoters (orange in Figure 2).
         - Many of the top YouTube videos shared by promoters of voter fraud claims are still available on YouTube as on 
         January 18th, 2021; all the top ten videos shared by the promoter communities were still online on January 10th. Explore the list on [this page](/?page=Explore+The+Dataset).
