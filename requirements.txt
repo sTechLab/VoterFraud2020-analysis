@@ -1,6 +1,7 @@
 streamlit
 pandas
 tweepy
+pickle5
 python-dotenv
 gensim
 torch

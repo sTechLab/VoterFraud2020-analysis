@@ -12,7 +12,8 @@ from interface.retweet_graph_analysis import get_retweet_graph_analysis_page
 from interface.top_image_analysis import get_top_image_analysis_page
 from interface.explore_data import get_explore_data_page
 import interface.SessionState as SessionState
-import pickle
+from interface.df_utils import load_pickled_df
+import pickle5 as pickle
 
 query_params = st.experimental_get_query_params()
 app_state = st.experimental_get_query_params()
@@ -59,7 +60,8 @@ def prepare_shared_state():
     #    state.user_df = pd.read_pickle(DATAFRAME_DIR + "df_users.pickle")
 
     # state.crawled_terms_df = pd.read_pickle(DATAFRAME_DIR + "df_crawled_terms.pickle")
-    state.df_counts_by_hour = pd.read_pickle(DATAFRAME_DIR + "df_counts_by_hour.pickle")
+    
+    state.df_counts_by_hour = load_pickled_df(DATAFRAME_DIR + "df_counts_by_hour.pickle")
     # state.df_most_common_hashtags = pd.read_pickle(
     #     DATAFRAME_DIR + "df_most_common_hashtags.pickle"
     # )
