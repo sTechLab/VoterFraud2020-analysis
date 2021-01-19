@@ -1,17 +1,9 @@
 import streamlit as st
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from collections import defaultdict
 import pandas as pd
 import numpy as np
 from PIL import Image
-
-# Plot styles
-import matplotlib.style as style
 import json
-
-style.use("seaborn-poster")
-style.use("ggplot")
 
 def get_column_from_selection(selected_cluster, selected_content):
     if selected_cluster == "All":

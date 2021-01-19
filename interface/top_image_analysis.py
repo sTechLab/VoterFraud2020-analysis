@@ -1,17 +1,8 @@
 import streamlit as st
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from collections import defaultdict
 import pandas as pd
 import numpy as np
 from PIL import Image
-
-# Plot styles
-import matplotlib.style as style
-import json
-
-style.use("seaborn-poster")
-style.use("ggplot")
 
 
 def get_top_image_analysis_page(shared_state):
@@ -34,33 +25,43 @@ def get_top_image_analysis_page(shared_state):
 
     selected_cluster = st.selectbox(
         "Select cluster",
-        ["Promoters of Voter Fraud Claims", "Detractors of Voter Fraud Claims", "Suspended Users"],
+        [
+            "Promoters of Voter Fraud Claims",
+            "Detractors of Voter Fraud Claims",
+            "Suspended Users",
+        ],
     )
 
-    
-    st.markdown("""
+    st.markdown(
+        """
         <style>
         img {
             max-width: 100%;
         }
         </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
-    st.markdown("""
+    st.markdown(
+        """
         ### 1) 4,700 retweets from detractors of voter fraud claims
         - Appeared in 20 tweets.  
         - Total retweet count: 10,743.  
 
         ![Image 1](https://storage.googleapis.com/vote-twitter-stream/5547006013472768.jpg)
-    """)
+    """
+    )
 
-    st.markdown("""
+    st.markdown(
+        """
         ### 2) 3,424 retweets from detractors of voter fraud claims
         - Appeared in 8 tweets.  
         - Total retweet count: 6,425.  
 
         ![Image 2](https://storage.googleapis.com/vote-twitter-stream/4674182692470784.jpg)
-    """)
+    """
+    )
 
 
 if __name__ == "__main__":

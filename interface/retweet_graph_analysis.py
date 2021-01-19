@@ -1,17 +1,8 @@
 import streamlit as st
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 from collections import defaultdict
 import pandas as pd
 import numpy as np
 from PIL import Image
-
-# Plot styles
-import matplotlib.style as style
-import json
-
-style.use("seaborn-poster")
-style.use("ggplot")
 
 img_retweet_graph = Image.open("./interface/img/retweet-graph.png")
 img_community_stats = Image.open("./interface/img/community_stats.png")
@@ -75,13 +66,15 @@ def get_retweet_graph_analysis_page(shared_state):
     """
     )
 
-    st.markdown("""
+    st.markdown(
+        """
         The VoterFraud2020 dataset is also enhanced with metadata about the users' suspension status. 
         In total 3.9% of the accounts (99,884) in the data were suspended.
 
         The visualization below shows that Twitter have primarily suspended users in the "promoters"-cluster
         (suspended users colored in orange):
-    """)
+    """
+    )
     st.image(img_retweet_graph_suspended, use_column_width=True)
 
 
