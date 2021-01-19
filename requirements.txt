@@ -11,7 +11,7 @@ matplotlib
 bs4
 spacy
 seaborn
-twarq
+twarc
 tqdm
 networkx
 python-louvain
