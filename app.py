@@ -12,11 +12,13 @@ import pickle5 as pickle
 
 st.set_page_config(
     page_title="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims",
-    page_icon = "./interface/img/favicon.ico",
+    page_icon="./interface/img/favicon.ico",
     # layout = 'wide',
     initial_sidebar_state="expanded",
 )
 
+
+@st.cache
 def insert_html_header(name, snippet):
     a = os.path.dirname(st.__file__) + "/static/index.html"
     with open(a, "r") as f:
@@ -31,7 +33,9 @@ def insert_html_header(name, snippet):
 
 
 ## Google analytics
-insert_html_header("Google Analytics Tag", """
+insert_html_header(
+    "Google Analytics Tag",
+    """
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VB4WZRD7C"></script>
 <script>
@@ -41,9 +45,12 @@ insert_html_header("Google Analytics Tag", """
 
   gtag('config', 'G-8VB4WZRD7C');
 </script>
-""")
+""",
+)
 
-insert_html_header("Meta tags", """
+insert_html_header(
+    "Meta tags",
+    """
 <!-- Primary Meta Tags -->
 <title>VoterFraud2020 - a Twitter Dataset of Election Fraud Claims</title>
 <meta name="title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
@@ -62,7 +69,11 @@ insert_html_header("Meta tags", """
 <meta property="twitter:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
 <meta property="twitter:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
 <meta property="twitter:image" content="{}">
-""".format(bucket_image_urls["retweet_graph_suspended"], bucket_image_urls["retweet_graph_suspended"]))
+""".format(
+        bucket_image_urls["retweet_graph_suspended"],
+        bucket_image_urls["retweet_graph_suspended"],
+    ),
+)
 
 query_params = st.experimental_get_query_params()
 app_state = st.experimental_get_query_params()
@@ -103,9 +114,38 @@ def prepare_shared_state():
 
     # state.crawled_terms_df = pd.read_pickle(DATAFRAME_DIR + "df_crawled_terms.pickle")
 
-    state.df_counts_by_hour = load_pickled_df(
-        DATAFRAME_DIR + "df_counts_by_hour.pickle"
-    )
+    state.df_images_promoters = pd.read_csv(
+        "./interface/data/top_10_retweeted_promoters.csv", delimiter=";"
+    ).drop("Unnamed: 0", axis=1)[
+        [
+            "num_of_unique_tweet_id",
+            "sum_of_retweets_by_cluster_1_to_4",
+            "sum_of_retweet_count",
+            "image_url",
+        ]
+    ]
+
+    state.df_images_detractors = pd.read_csv(
+        "./interface/data/top_10_retweeted_detractors.csv", delimiter=";"
+    ).drop("Unnamed: 0", axis=1)[
+        [
+            "num_of_unique_tweet_id",
+            "retweets_by_cluster_0",
+            "sum_of_retweet_count",
+            "image_url",
+        ]
+    ]
+
+    state.df_images_suspended = pd.read_csv(
+        "./interface/data/top_10_retweeted_suspended.csv", delimiter=";"
+    ).drop("Unnamed: 0", axis=1)[
+        [
+            "num_of_unique_tweet_id",
+            "retweets_by_suspended",
+            "sum_of_retweet_count",
+            "image_url",
+        ]
+    ]
     # state.df_most_common_hashtags = pd.read_pickle(
     #     DATAFRAME_DIR + "df_most_common_hashtags.pickle"
     # )

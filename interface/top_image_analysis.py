@@ -2,25 +2,12 @@ import streamlit as st
 from collections import defaultdict
 import pandas as pd
 import numpy as np
-from PIL import Image
 
 CLUSTER_PROMOTERS = "Promoters of Voter Fraud Claims"
 CLUSTER_DETRACTORS = "Detractors of Voter Fraud Claims"
 CLUSTER_SUSPENDED = "Suspended Users"
 
-def get_images_df(cluster):
-    if (cluster == CLUSTER_PROMOTERS):
-        df = pd.read_csv("./interface/data/top_10_retweeted_promoters.csv", delimiter=";").drop("Unnamed: 0", axis=1)
-        return df[["num_of_unique_tweet_id", "sum_of_retweets_by_cluster_1_to_4", "sum_of_retweet_count", "image_url"]]
-    elif (cluster == CLUSTER_DETRACTORS):
-        df = pd.read_csv("./interface/data/top_10_retweeted_detractors.csv", delimiter=";").drop("Unnamed: 0", axis=1)
-        return df[["num_of_unique_tweet_id", "retweets_by_cluster_0", "sum_of_retweet_count", "image_url"]]
-    elif (cluster == CLUSTER_SUSPENDED):
-        df = pd.read_csv("./interface/data/top_10_retweeted_suspended.csv", delimiter=";").drop("Unnamed: 0", axis=1)
-        return df[["num_of_unique_tweet_id", "retweets_by_suspended", "sum_of_retweet_count", "image_url"]]
-
 def get_top_image_analysis_page(shared_state):
-
     st.header("Top Images")
     st.markdown(
         """
@@ -43,9 +30,14 @@ def get_top_image_analysis_page(shared_state):
         ],
     )
 
-    df = get_images_df(selected_cluster)
-
-    for i, tweet_count, cluster_retweet_count, total_retweet_count, image_url in df.itertuples():
+    if (selected_cluster == CLUSTER_PROMOTERS):
+        selected_df = shared_state.df_images_promoters
+    elif (selected_cluster == CLUSTER_DETRACTORS):
+        selected_df = shared_state.df_images_detractors
+    else:
+        selected_df = shared_state.df_images_suspended
+    
+    for i, tweet_count, cluster_retweet_count, total_retweet_count, image_url in selected_df.itertuples():
 
         rank = i + 1
         st.markdown(
