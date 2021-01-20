@@ -1,6 +1,9 @@
-# voter-fraud-analysis
+# VoterFraud2020-analysis
+This repository contains the code behind the data analysis presented in the VoterFraud2020 paper.
 
-## [Link to the web application](https://voterfraud2020.io/)
+- [voterfraud2020.io](http://voterfraud2020.io), interactive web application for exploring the dataset
+- [Figshare dataset publication](https://doi.org/10.6084/m9.figshare.13571084) with digital object identifier (DOI) **10.6084/m9.figshare.13571084**
+
 
 ## Repository set up
 ```
