@@ -43,17 +43,6 @@ def get_top_image_analysis_page(shared_state):
         ],
     )
 
-    st.markdown(
-        """
-        <style>
-        img {
-            max-width: 100%;
-        }
-        </style>
-    """,
-        unsafe_allow_html=True,
-    )
-
     df = get_images_df(selected_cluster)
 
     for i, tweet_count, cluster_retweet_count, total_retweet_count, image_url in df.itertuples():

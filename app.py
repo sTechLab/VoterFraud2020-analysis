@@ -7,6 +7,7 @@ from interface.top_image_analysis import get_top_image_analysis_page
 from interface.explore_data import get_explore_data_page
 import interface.SessionState as SessionState
 from interface.df_utils import load_pickled_df
+from interface.image_urls import bucket_image_urls
 import pickle5 as pickle
 
 st.set_page_config(
@@ -53,15 +54,15 @@ insert_html_header("Meta tags", """
 <meta property="og:url" content="https://metatags.io/">
 <meta property="og:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
 <meta property="og:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
-<meta property="og:image" content="https://storage.googleapis.com/voter-fraud-2020/img/retweet-graph-suspended-orange-min.jpg">
+<meta property="og:image" content="{}">
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="https://metatags.io/">
 <meta property="twitter:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
 <meta property="twitter:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
-<meta property="twitter:image" content="https://storage.googleapis.com/voter-fraud-2020/img/retweet-graph-suspended-orange-min.jpg">
-""")
+<meta property="twitter:image" content="{}">
+""".format(bucket_image_urls["retweet_graph_suspended"], bucket_image_urls["retweet_graph_suspended"]))
 
 query_params = st.experimental_get_query_params()
 app_state = st.experimental_get_query_params()
@@ -137,6 +138,18 @@ def get_selected_page_index():
 
 
 shared_state = prepare_shared_state()
+
+## CSS
+st.markdown(
+    """
+    <style>
+    img {
+        max-width: 100%;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
 
 st.sidebar.title("Navigation")
 

@@ -2,14 +2,7 @@ import streamlit as st
 from collections import defaultdict
 import pandas as pd
 import numpy as np
-from PIL import Image
-
-img_retweet_graph = Image.open("./interface/img/retweet-graph.png")
-img_community_stats = Image.open("./interface/img/community_stats.png")
-img_retweet_graph_suspended = Image.open(
-    "./interface/img/retweet-graph-suspended-orange-min.jpg"
-)
-
+from .image_urls import bucket_image_urls
 
 def get_retweet_graph_analysis_page(shared_state):
     coverage_stats = shared_state.coverage_stats
@@ -51,12 +44,9 @@ def get_retweet_graph_analysis_page(shared_state):
         columns=["Community", "Users", "% relative size"],
     )
 
-    # df_community_stats.index = [""] * len(df_community_stats)
-
     col1, col2 = st.beta_columns(2)
-    col1.image(img_community_stats, use_column_width=True)
-    # col1.table(df_community_stats.round(1).astype("str"))
-    col2.image(img_retweet_graph, use_column_width=True)
+    col1.markdown("![Table 1]({})".format(bucket_image_urls["community_stats"]))
+    col2.markdown("![Figure 1]({})".format(bucket_image_urls["retweet_graph"]))
     st.markdown("""
         _**Table 1 & Figure 1:** Five communities in the retweet graph of people posting about voter-fraud claims; the blue cluster on the left side is mostly of detractors of the claim._
     """)
@@ -76,7 +66,7 @@ def get_retweet_graph_analysis_page(shared_state):
         In total 3.9% of the accounts (99,884) in the data were suspended.
     """
     )
-    st.image(img_retweet_graph_suspended, use_column_width=True)
+    st.markdown("![Figure 2]({})".format(bucket_image_urls["retweet_graph_suspended"]))
     st.markdown("""
         **Figure 2:** Where suspended users were located in the retweet graph (orange); they mostly came from a specific subcommunity of claim promoters.
     """)

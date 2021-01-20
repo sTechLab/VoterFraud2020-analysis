@@ -2,8 +2,6 @@ import streamlit as st
 from collections import defaultdict
 import pandas as pd
 import numpy as np
-from PIL import Image
-import json
 from interface.df_utils import load_pickled_df
 
 def get_column_from_selection(selected_cluster, selected_content):

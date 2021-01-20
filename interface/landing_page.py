@@ -2,12 +2,7 @@ import streamlit as st
 from collections import defaultdict
 import pandas as pd
 import numpy as np
-from PIL import Image
-
-img_retweet_graph = Image.open("./interface/img/retweet-graph.png")
-img_retweet_graph_suspended = Image.open(
-    "./interface/img/retweet-graph-suspended-orange-min.jpg"
-)
+from .image_urls import bucket_image_urls
 
 
 def get_landing_page(shared_state):
@@ -60,18 +55,18 @@ def get_landing_page(shared_state):
             coverage_stats["retweet_count"],
         )
     )
-    st.subheader("")
-    col1, col2 = st.beta_columns(2)
     
-    st.image(img_retweet_graph, use_column_width=True)
+    # st.image(img_retweet_graph, use_column_width=True)
     st.markdown("""
+        ![Figure 1]({})
         **Figure 1:** Five communities in the retweet graph of people posting about voter-fraud claims; the blue cluster on the left side is mostly of detractors of the claim.
-    """)
+    """.format(bucket_image_urls["retweet_graph"]))
     
-    st.image(img_retweet_graph_suspended, use_column_width=True)
+    # st.image(img_retweet_graph_suspended, use_column_width=True)
     st.markdown("""
+        ![Figure 1]({})
         **Figure 2:** Where suspended users were located in the retweet graph (orange); they mostly came from a specific subcommunity of claim promoters.
-    """)
+    """.format(bucket_image_urls["retweet_graph_suspended"]))
 
 
 if __name__ == "__main__":
