@@ -9,9 +9,28 @@ import interface.SessionState as SessionState
 from interface.df_utils import load_pickled_df
 import pickle5 as pickle
 
-## Google analytics
+st.set_page_config(
+    page_title="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims",
+    page_icon = "./interface/img/favicon.ico",
+    # layout = 'wide',
+    initial_sidebar_state="expanded",
+)
 
-google_analytics_snippet = """
+def insert_html_header(name, snippet):
+    a = os.path.dirname(st.__file__) + "/static/index.html"
+    with open(a, "r") as f:
+        data = f.read()
+        if snippet not in data:
+            print("Inserting {}".format(name))
+            with open(a, "w") as ff:
+                new_data = re.sub("<head>", "<head>" + snippet, data)
+                ff.write(new_data)
+        else:
+            print("{} already inserted".format(name))
+
+
+## Google analytics
+insert_html_header("Google Analytics Tag", """
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VB4WZRD7C"></script>
 <script>
@@ -21,32 +40,34 @@ google_analytics_snippet = """
 
   gtag('config', 'G-8VB4WZRD7C');
 </script>
-"""
+""")
 
-a = os.path.dirname(st.__file__) + "/static/index.html"
-with open(a, "r") as f:
-    data = f.read()
-    if len(re.findall("G-8VB4WZRD7C", data)) == 0:
-        print("Inserting Google Analytics Tag")
-        with open(a, "w") as ff:
-            new_data = re.sub("<head>", "<head>" + google_analytics_snippet, data)
-            ff.write(new_data)
-    else:
-        print("Google Analytics Tag already inserted")
+insert_html_header("Meta tags", """
+<!-- Primary Meta Tags -->
+<title>VoterFraud2020 - a Twitter Dataset of Election Fraud Claims</title>
+<meta name="title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
+<meta name="description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
 
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://metatags.io/">
+<meta property="og:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
+<meta property="og:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
+<meta property="og:image" content="https://storage.googleapis.com/voter-fraud-2020/img/retweet-graph-suspended-orange-min.jpg">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://metatags.io/">
+<meta property="twitter:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
+<meta property="twitter:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
+<meta property="twitter:image" content="https://storage.googleapis.com/voter-fraud-2020/img/retweet-graph-suspended-orange-min.jpg">
+""")
 
 query_params = st.experimental_get_query_params()
 app_state = st.experimental_get_query_params()
 
 session_state = SessionState.get(first_query_params=query_params)
 first_query_params = session_state.first_query_params
-
-st.set_page_config(
-    page_title="VoterFraud2020",
-    # page_icon = favicon,
-    # layout = 'wide',
-    initial_sidebar_state="expanded",
-)
 
 PAGES = {
     "VoterFraud2020": get_landing_page,

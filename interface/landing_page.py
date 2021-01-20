@@ -23,7 +23,7 @@ def get_landing_page(shared_state):
         with data about their spread in different Twitter sub-communities. 
 
         The methodology for our data collection including the tracked keywords is detailed in [the paper 
-        available from Arxiv](link-to-paper). 
+        available from arXiv](link-to-paper). 
         
         Our hope is that the dataset will be used to study the spread, reach, and 
         dynamics of the voter fraud claims campaign on Twitter. The data can help expose, for example, how different 
@@ -37,11 +37,12 @@ def get_landing_page(shared_state):
 
         ### Key Takeaways
         - Community detection performed on the dataset reveals that there are 5 main sub-communities involved in the discussion: 
-        four communities that seem to promote such claims (*"promoters"*) and one community of *"detractors"* (blue in Figure 1 on this page).
-        - The dataset is enhanced with community labels to enable quick study of how URLs, images and youtube videos spread within these sub-communities.
+        four communities that seem to promote such claims (*"promoters"*) and one community of *"detractors"* (colored blue in Figure 1 on this page).
+        - The dataset is enhanced with the community labels to enable quick study of how URLs, images and youtube videos spread within these sub-communities.
         The navigation on this page provides a quick summary of the top users, tweets, videos and links shared.
         - Our data identifies 99,884 suspended users, allowing researchers to investigate [Twitter's response](https://blog.twitter.com/en_us/topics/company/2021/protecting--the-conversation-following-the-riots-in-washington--.html) to voter fraud claims.
-        Preliminary analyses show that Twitter’s ban actions mostly affected a specific community within the cluster of voter fraud claim promoters (orange in Figure 2).
+        Preliminary analyses show that Twitter’s ban actions mostly affected a specific community within the cluster of voter fraud claim promoters (orange in Figure 2, mostly overlapping with the yellow community in Figure 1).
+        - An initial analysis found 34,938 users in the data who used QAnon-related hashtags in their tweets or profile description. Of these users, 64% were suspended. There is strong evidence that Twitter’s suspensions focused on the QAnon community. We found that 79% of these “QAnon users” for whom we had network data were indeed part of the community where banning rates were highest (yellow in Figure 1). The rate of QAnon hashtags in that community was 6 to 90 times higher than other communities in that graph.
         - Many of the top YouTube videos shared by promoters of voter fraud claims are still available on YouTube as on 
         January 18th, 2021; all the top ten videos shared by the promoter communities were still online on January 10th. Explore the list on [this page](/?page=Explore+The+Dataset).
         - Additional information about the data and analysis is available in [the paper](link-to-paper).
