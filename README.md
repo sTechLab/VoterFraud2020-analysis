@@ -1,6 +1,6 @@
 # voter-fraud-analysis
 
-## [Link to the live demo application](http://35.208.173.244/)
+## [Link to the web application](https://voterfraud2020.io/)
 
 ## Repository set up
 ```
