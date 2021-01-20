@@ -4,6 +4,7 @@ import os, re
 from interface.landing_page import get_landing_page
 from interface.retweet_graph_analysis import get_retweet_graph_analysis_page
 from interface.top_image_analysis import get_top_image_analysis_page
+from interface.candidate_analysis import get_candidate_analysis_page
 from interface.explore_data import get_explore_data_page
 import interface.SessionState as SessionState
 from interface.df_utils import load_pickled_df
@@ -86,6 +87,7 @@ PAGES = {
     "Retweet Graph Analysis": get_retweet_graph_analysis_page,
     "Explore The Dataset": get_explore_data_page,
     "Top Images": get_top_image_analysis_page,
+    "Midterm Candidates": get_candidate_analysis_page,
     # "Overview": get_tweet_analysis_page,
     # "Top Tweets": get_weekly_tweet_analysis_page,
     # "Top Users": get_weekly_user_analysis_page,
@@ -124,6 +126,9 @@ def prepare_shared_state():
             "image_url",
         ]
     ]
+
+    state.df_candidates = pd.read_pickle("./interface/data/candidate_users.pickle")
+    state.df_candidates["user_community"] = state.df_candidates["user_community"].astype(object)
 
     state.df_images_detractors = pd.read_csv(
         "./interface/data/top_10_retweeted_detractors.csv", delimiter=";"
