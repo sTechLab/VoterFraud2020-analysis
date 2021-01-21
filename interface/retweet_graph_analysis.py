@@ -15,7 +15,8 @@ def get_retweet_graph_analysis_page(shared_state):
         The direction of an edge corresponds to the direction of the information 
         spreading in the retweet relation. Edges are weighted according to the 
         number of times the corresponding source user has been retweeted. 
-        The resulting network consists of 1,887,736 nodes and 16,718,884 edges.
+        The resulting network consists of 1,887,736 nodes and 16,718,884 edges. 
+        Since the graph only includes retweeting and retweeted users, this number corresponds to 73.8% of all users in our dataset.
 
 
         ### Community Detection using Infomap
@@ -48,7 +49,7 @@ def get_retweet_graph_analysis_page(shared_state):
     col1.markdown("![Table 1]({})".format(bucket_image_urls["community_stats"]))
     col2.markdown("![Figure 1]({})".format(bucket_image_urls["retweet_graph"]))
     st.markdown("""
-        _**Table 1 & Figure 1:** Five communities in the retweet graph of people posting about voter-fraud claims; the blue cluster on the left side is mostly of detractors of the claim._
+        _**Table 1 & Figure 1:** Five communities in the retweet graph of people posting about voter-fraud claims; the blue cluster on the left side is mostly of detractors of the claims._
     """)
 
     st.markdown(

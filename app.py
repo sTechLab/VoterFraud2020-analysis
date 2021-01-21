@@ -55,20 +55,20 @@ insert_html_header(
 <!-- Primary Meta Tags -->
 <title>VoterFraud2020 - a Twitter Dataset of Election Fraud Claims</title>
 <meta name="title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
-<meta name="description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
+<meta name="description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://metatags.io/">
 <meta property="og:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
-<meta property="og:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
+<meta property="og:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
 <meta property="og:image" content="{}">
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="https://metatags.io/">
 <meta property="twitter:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
-<meta property="twitter:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets related to voter fraud claims.">
+<meta property="twitter:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
 <meta property="twitter:image" content="{}">
 """.format(
         bucket_image_urls["retweet_graph_suspended"],
@@ -128,7 +128,9 @@ def prepare_shared_state():
     ]
 
     state.df_candidates = pd.read_pickle("./interface/data/candidate_users.pickle")
-    state.df_candidates["user_community"] = state.df_candidates["user_community"].astype(object)
+    state.df_candidates["user_community"] = state.df_candidates[
+        "user_community"
+    ].astype(object)
 
     state.df_images_detractors = pd.read_csv(
         "./interface/data/top_10_retweeted_detractors.csv", delimiter=";"
@@ -188,6 +190,19 @@ shared_state = prepare_shared_state()
 st.markdown(
     """
     <style>
+    img.logo {
+        margin: 0px auto;
+        margin-top: -45px;
+        margin-bottom: 25px;
+        width: 200px;
+    }
+
+    img.logo-2 {
+        margin: 0px auto;
+        margin-top: 25px;
+        width: 200px;
+    }
+
     img {
         max-width: 100%;
     }
@@ -196,19 +211,37 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+
+st.sidebar.markdown(
+    """
+    <img src="{}" class="logo" alt="CT logo" />
+""".format(
+        bucket_image_urls["jacobs-logo-transparent"]
+    ), unsafe_allow_html=True
+)
+
+
 st.sidebar.title("Navigation")
 
 selection = st.sidebar.radio("Go to", PAGE_OPTIONS, index=get_selected_page_index())
 
 st.sidebar.markdown(
     """
-    - [The Paper (PDF)]()
+    - [The Paper (arXiv)](https://arxiv.org/abs/2101.08210)
 
     ### Download The Dataset
     - [Github Repository](https://github.com/sTechLab/VoterFraud2020)  
     - [Fighshare](https://doi.org/10.6084/m9.figshare.13571084)
 """
 )
+
+# st.sidebar.markdown(
+#     """
+#     <img src="{}" class="logo-2" alt="Jacobs logo" />
+# """.format(
+#         bucket_image_urls["jacobs-logo-transparent"]
+#     ), unsafe_allow_html=True
+# )
 
 app_state["page"] = selection
 
