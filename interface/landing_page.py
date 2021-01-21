@@ -31,7 +31,7 @@ def get_landing_page(shared_state):
         public figures spread different claims, and the types of engagement various narratives received. 
         
 
-        The paper, the dataset, and this web page are done in a collaboration between the 
+        The paper, dataset, and this web page are done in a collaboration between the 
         [Social Technologies Lab](https://s.tech.cornell.edu/) at Cornell Tech and The Technion. 
         
         The project was led by [Anton Abilov](https://twitter.com/antonabilov), [Yiqing Hua](http://yiqing-hua.com/), and [Hana Matatov](https://twitter.com/hanamatatov). Inquiries should go to Professor Mor Naaman at [mor.naaman@cornell.edu](mailto:mor.naaman@cornell.edu).
@@ -45,7 +45,7 @@ def get_landing_page(shared_state):
         We found that 79% of these “QAnon users” for whom we had network data were part of the "yellow" sub-community where suspension rates were highest (Figure 1). 
         The rate of QAnon hashtags in the yellow sub-community was 6 to 90 times higher than other sub-communities in that graph.
         - Many of the top YouTube videos shared by promoters of voter fraud claims are still available on YouTube as on 
-        January 18th, 2021; all the top ten videos shared by the promoter communities were still available on Youtube on January 10th. Explore the list on [this page](/?page=Explore+The+Dataset).
+        January 18th, 2021; all the top ten videos shared by the promoter communities were still available on YouTube on January 10th. Explore the list on [this page](/?page=Explore+The+Dataset).
         - Additional information about the data and analysis is available in [the paper](https://arxiv.org/abs/2101.08210).
 
         ### Privacy and Ethical Considerations
