@@ -16,7 +16,7 @@ def get_candidate_analysis_page(shared_state):
         This page shows statistics for the Twitter accounts of **2020 midterm election candidates** that appear in the VoterFraud2020 dataset. 
         For comparison, Donald Trump's account (@realDonaldTrump) was also added. 
 
-        The list of Twitter accounts was obtained from [this paper](https://arxiv.org/abs/2005.04412).
+        The list of Twitter accounts was obtained from [this repository](https://github.com/vegetable68/Midterm-2020-candidates).
 
     """
     )

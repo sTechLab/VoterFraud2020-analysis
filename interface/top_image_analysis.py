@@ -13,7 +13,7 @@ def get_top_image_analysis_page(shared_state):
         """
         We investigated the popularity of images within the promoter and detractor clusters. Popularity is defined by the highest number of retweets by users from each cluster. 
         
-        After grouping images by the same pHash value (a perceptual hash value), we present the top 10 images that have been retweeted in each cluster.
+        After grouping images by the same [pHash value](https://github.com/sTechLab/VoterFraud2020#images) (a perceptual hash value), we present the top 10 images that have been retweeted in each cluster.
         We also include the total number of tweets in the dataset that shared the image, and the total number of retweets as they appear in metadata.
         
         We present the same analysis for users from the suspended set, i.e. the most retweeted images by users that were suspended from Twitter.

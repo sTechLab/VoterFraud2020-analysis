@@ -229,7 +229,7 @@ st.sidebar.markdown(
     """
     - [The Paper (arXiv)](https://arxiv.org/abs/2101.08210)
 
-    ### Download The Dataset
+    ### Download The Full Dataset
     - [Github Repository](https://github.com/sTechLab/VoterFraud2020)  
     - [Fighshare](https://doi.org/10.6084/m9.figshare.13571084)
 """
