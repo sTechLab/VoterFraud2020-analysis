@@ -28,13 +28,13 @@ def get_landing_page(shared_state):
         The paper, dataset, and the initial analysis provided here is a collaboration between the 
         [Social Technologies Lab](https://s.tech.cornell.edu/) at Cornell Tech and Technion. 
         
-        The project was led by [Anton Abilov](https://twitter.com/antonabilov), [Yiqing Hua](http://yiqing-hua.com/), and Hana Matatov. Inquiries should go to Professor Mor Naaman at [mor.naaman@cornell.edu](mailto:mor.naaman@cornell.edu).
+        The project was led by [Anton Abilov](https://twitter.com/antonabilov), [Yiqing Hua](http://yiqing-hua.com/), and [Hana Matatov](https://twitter.com/hanamatatov). Inquiries should go to Professor Mor Naaman at [mor.naaman@cornell.edu](mailto:mor.naaman@cornell.edu).
 
         ### Key Takeaways
         - Community detection performed on the dataset reveals that there are 5 main sub-communities involved in the discussion: 
         four communities that seem to promote such claims (*"promoters"*) and one community of *"detractors"* (colored blue in Figure 1 on this page).
         - The dataset is enhanced with the community labels to enable quick study of how URLs, images and youtube videos spread within these sub-communities.
-        The navigation on this page provides a quick summary of the top users, tweets, videos and links shared.
+        The navigation on [this page](http://localhost:8501/?page=Explore+The+Dataset) provides a quick summary of the top users, tweets, videos and links shared.
         - Our data identifies 99,884 suspended users, allowing researchers to investigate [Twitter's response](https://blog.twitter.com/en_us/topics/company/2021/protecting--the-conversation-following-the-riots-in-washington--.html) to voter fraud claims.
         Preliminary analyses show that Twitter’s ban actions mostly affected a specific community within the cluster of voter fraud claim promoters (orange in Figure 2, mostly overlapping with the yellow community in Figure 1).
         - An initial analysis found 34,938 users in the data who used QAnon-related hashtags in their tweets or profile description. Of these users, 64% were suspended. There is strong evidence that Twitter’s suspensions focused on the QAnon community. We found that 79% of these “QAnon users” for whom we had network data were indeed part of the community where banning rates were highest (yellow in Figure 1). The rate of QAnon hashtags in that community was 6 to 90 times higher than other communities in that graph.
@@ -47,7 +47,7 @@ def get_landing_page(shared_state):
         established guidelines for ethical Twitter data use. We do not directly share content of individual tweets. 
         By using Tweet IDs as the main data element the dataset does not expose information about users whose data had been removed from the service. 
 
-        *Anton Abilov, Yiqing Hua ([@yiqqqing](https://twitter.com/yiqqqing)), Hana Matatov, Ofra Amir ([@ofraam](https://twitter.com/ofraam)) & Mor Naaman ([@informor](https://twitter.com/informor)).*
+        *Anton Abilov ([@AntonAbilov](https://twitter.com/antonabilov)), Yiqing Hua ([@yiqqqing](https://twitter.com/yiqqqing)), Hana Matatov ([@HanaMatatov](https://twitter.com/hanamatatov)), Ofra Amir ([@ofraam](https://twitter.com/ofraam)) & Mor Naaman ([@informor](https://twitter.com/informor)).*
 
     """.format(
             coverage_stats["recent_tweet_count"] - coverage_stats["quote_tweet_count"],
