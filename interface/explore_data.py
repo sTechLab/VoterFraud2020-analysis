@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from interface.df_utils import load_pickled_df
 
+TOP_N = 20
+
 def get_column_from_selection(selected_cluster, selected_content):
     if selected_cluster == "All":
         if (selected_content == "Top Users"):
@@ -51,19 +53,19 @@ def get_content_dataframe(selected_cluster, selected_content, selected_method):
                 selected_cluster,
                 selected_content,
             )
-            df_table = df_top_users.nlargest(10, column)[["handle", "followers_count", "user_active_status", "retweet_count_streamed", column]]
+            df_table = df_top_users.nlargest(TOP_N, column)[["handle", "followers_count", "user_active_status", "retweet_count_streamed", column]]
             df_table.index = [""] * len(df_table)
             return df_table
 
         elif selected_content == "Top Tweets":
             df_top_tweets = load_pickled_df("./interface/data/top_tweets.pickle")
-            df_table = df_top_tweets.nlargest(10, column)[["text", column]]
+            df_table = df_top_tweets.nlargest(TOP_N, column)[["text", column]]
             df_table.index = [""] * len(df_table)
             return df_table
 
         elif selected_content == "Top Hashtags":
             df_top_hashtags = load_pickled_df("./interface/data/top_hashtags.pickle")
-            df_table = df_top_hashtags.nlargest(10, column)[[column]]
+            df_table = df_top_hashtags.nlargest(TOP_N, column)[[column]]
             #df_table.index = [""] * len(df_table)
             return df_table
 
@@ -71,13 +73,13 @@ def get_content_dataframe(selected_cluster, selected_content, selected_method):
             df_top_videos = load_pickled_df("./interface/data/top_youtube_videos.pickle")
             df_top_videos["video_url"] = df_top_videos.apply(lambda x: "http://youtu.be/" + x.name, axis=1)
             df_top_videos["channel_url"] = df_top_videos.apply(lambda x: "http://youtube.com/channel/" + x["channel_id"], axis=1)
-            df_table = df_top_videos.nlargest(10, column)[["video_url", "channel_title", "channel_url", column]]
+            df_table = df_top_videos.nlargest(TOP_N, column)[["video_url", "channel_title", "channel_url", column]]
             df_table.index = [""] * len(df_table)
             return df_table
         
         elif selected_content == "Top URLs":
             df_top_urls = load_pickled_df("./interface/data/top_urls.pickle")
-            df_table = df_top_urls.nlargest(10, column)[["domain", column]]
+            df_table = df_top_urls.nlargest(TOP_N, column)[["domain", column]]
             #df_table.index = [""] * len(df_table)
             return df_table
 
@@ -90,7 +92,7 @@ def get_content_dataframe(selected_cluster, selected_content, selected_method):
                 selected_cluster,
                 selected_content,
             )
-            df_table = df_top_users.nlargest(10, column)[["handle", column]]
+            df_table = df_top_users.nlargest(TOP_N, column)[["handle", column]]
             df_table.index = [""] * len(df_table)
             return df_table
 
@@ -100,7 +102,7 @@ def get_content_dataframe(selected_cluster, selected_content, selected_method):
                 selected_cluster,
                 selected_content,
             )
-            df_table = df_top_tweets.nlargest(10, column)[["text", column]]
+            df_table = df_top_tweets.nlargest(TOP_N, column)[["text", column]]
             df_table.index = [""] * len(df_table)
             return df_table
 
