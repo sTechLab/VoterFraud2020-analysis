@@ -7,7 +7,7 @@ from interface.df_utils import load_pickled_df
 def get_column_from_selection(selected_cluster, selected_content):
     if selected_cluster == "All":
         if (selected_content == "Top Users"):
-            return "retweet_count_streamed"
+            return "retweet_count_metadata"
         else:
             return "retweet_count_metadata"
     elif selected_cluster == "Detractors of Voter Fraud Claims":
@@ -45,13 +45,13 @@ def get_content_dataframe(selected_cluster, selected_content, selected_method):
             # df_table = df_top_users.nlargest(10, column)[["handle", column]]
             # df_table.index = [""] * len(df_table)
             # return df_table
-            column = "retweet_count_streamed"
+            column = "retweet_count_metadata"
             df_top_users = filter_dataframe(
                 load_pickled_df("./interface/data/top_users.pickle"),
                 selected_cluster,
                 selected_content,
             )
-            df_table = df_top_users.nlargest(10, column)[["handle", "followers_count", column]]
+            df_table = df_top_users.nlargest(10, column)[["handle", "followers_count", "user_active_status", "retweet_count_streamed", column]]
             df_table.index = [""] * len(df_table)
             return df_table
 
