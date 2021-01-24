@@ -23,6 +23,55 @@ def get_column_from_selection(selected_cluster, selected_content):
     elif selected_cluster == "Suspended Users":
         return "retweet_count_by_suspended_users"
 
+def get_field_description(selected_cluster, selected_content):
+    description = "### Field Description"
+    if (selected_content == "Top Users"):
+        description += ("""
+- **retweet_count_metadata**: Aggregated count of retweets that the user received from other users. Limited to tweets that were streamed during the collection of the dataset (Oct 23rd-Dec 16th).
+- **retweet_count_streamed**: Aggregated count of retweets that the user received from other users. Limited to tweets and retweets that were streamed during the collection of the dataset (a subset of *retweet_count_metadata*).
+- **user_active_status**: Whether the account was active or suspended (as of January 10th).
+        """)
+    else:
+        col = get_column_from_selection(selected_cluster, selected_content)
+        if selected_content == "Top Tweets":
+            count_text = "the tweet received"
+        elif selected_content == "Top Hashtags":
+            count_text = "tweets containing the hashtag received"
+        elif selected_content == "Top URLs":
+            count_text = "tweets containing the URL received"
+        elif selected_content == "Top Youtube Videos":
+            count_text = "tweets containing a link to the YouTube video received"
+        
+        if (selected_cluster == "Promoters of Voter Fraud Claims"):
+            count_text += " from users in sub-communities 1, 2, 3 and 4"
+        elif (selected_cluster == "Detractors of Voter Fraud Claims"):
+            count_text += " from users in sub-community 0"
+        elif (selected_cluster == "Community 0"):
+            count_text += " from users in sub-community 0"
+        elif (selected_cluster == "Community 1"):
+            count_text += " from users in sub-community 1"
+        elif (selected_cluster == "Community 2"):
+            count_text += " from users in sub-community 2"
+        elif (selected_cluster == "Community 3"):
+            count_text += " from users in sub-community 3"
+        elif (selected_cluster == "Community 4"):
+            count_text += " from users in sub-community 4"
+        elif (selected_cluster == "Suspended Users"):
+            count_text += " from suspended users"
+        
+        if (selected_cluster == "All"):
+            limitation = "tweets"
+        else:
+            limitation = "tweets and retweets"
+
+        description += """
+- **{}**: Aggregated count of retweets that {}. 
+Limited to {} that were streamed during the collection of the dataset (Oct 23rd-Dec 16th).
+        """.format(col, count_text, limitation)
+    
+    description += "\nRead [the paper](https://arxiv.org/abs/2101.08210) and [the Github documentation](https://github.com/sTechLab/Voterfraud2020#data-description) for a detailed explanation of all fields."
+    return description
+
 
 def filter_dataframe(df, selected_cluster, selected_content):
     if selected_cluster == "All":
@@ -149,6 +198,7 @@ def get_explore_data_page(shared_state):
     # )
     selected_method = "Show content by popularity in the selected cluster"
 
+    st.markdown(get_field_description(selected_cluster, selected_content))
     st.table(get_content_dataframe(selected_cluster, selected_content, selected_method))
 
 

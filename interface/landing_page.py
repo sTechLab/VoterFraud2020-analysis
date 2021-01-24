@@ -18,7 +18,9 @@ def get_landing_page(shared_state):
         The dataset also includes the full set of links and YouTube videos shared in these tweets, 
         with data about their spread in different Twitter sub-communities. Key takeaways from our initial analysis of the data are listed below.
 
-        The methodology for our data collection including the tracked keywords is detailed in [the paper, "VoterFraud2020: a Multi-modal Dataset of Election Fraud Claims on Twitter", available from arXiv](https://arxiv.org/abs/2101.08210).
+        The methodology for our data collection including the tracked keywords is detailed in the paper:    
+        [*A. Abilov, Y. Hua, H. Matatov, O. Amir and M. Naaman. (2021). VoterFraud2020: a Multi-modal Dataset of Election Fraud Claims on Twitter.*]
+        (https://arxiv.org/abs/2101.08210) The paper is currently undergoing peer-review.
 
         The dataset is enhanced with the sub-community labels to enable quick study of how URLs, images and youtube videos spread within these sub-communities. 
         The navigation on [this page](/?page=Explore+The+Dataset) provides a quick summary of the top users, tweets, videos and links shared. 
