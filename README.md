@@ -132,13 +132,16 @@ memory usage: 780.2+ MB
 ```
 ### /hydrated/users/
 
-Total users: 2,559,018
-Users with metadata: 2,460,175
+- **Total users**: 2,559,018
+- **Users with metadata**: 2,460,175
 
 Some of the user metadata is missing since we didn't pull metadata for retweeting users.
 As long as the user tweeted at least once within our dataset, their metadata is included.
 
 For retweeting users, we retroactively pulled their metadata on February 1st.
+For tweeting users, their metadata was pulled when we first streamed a tweet from this user or when we first streamed a retweet of this user's tweet (whichever comes first).
+
+If you are interested in the date the metadata was pulled you can look at the timestamp column in the retweets or tweets tables.
 
 ```
 (2559018, 24)
