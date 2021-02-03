@@ -131,6 +131,15 @@ dtypes: int64(2), object(1)
 memory usage: 780.2+ MB
 ```
 ### /hydrated/users/
+
+Total users: 2,559,018
+Users with metadata: 2,460,175
+
+Some of the user metadata is missing since we didn't pull metadata for retweeting users.
+As long as the user tweeted at least once within our dataset, their metadata is included.
+
+For retweeting users, we retroactively pulled their metadata on February 1st.
+
 ```
 (2559018, 24)
 <class 'pandas.core.frame.DataFrame'>
