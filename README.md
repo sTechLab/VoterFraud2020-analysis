@@ -82,53 +82,45 @@ load_chunks("/path/to/users")
 ## Dataset column info
 ### /hydrated/tweets/
 ```
-(7603103, 25)
-<class 'pandas.core.frame.DataFrame'>
-Int64Index: 7603103 entries, 0 to 52584
-Data columns (total 25 columns):
+Data columns (total: 25 columns, 7,603,103 tweets):
  #   Column                            Dtype  
 ---  ------                            -----  
- 0   tweet_id                          int64  
- 1   user_community                    float64
- 2   user_active_status                object 
- 3   retweet_count_metadata            int64  
- 4   quote_count_metadata              int64  
- 5   retweet_count_by_community_0      int64  
- 6   quote_count_by_community_0        int64  
- 7   retweet_count_by_community_1      int64  
- 8   quote_count_by_community_1        int64  
- 9   retweet_count_by_community_2      int64  
- 10  quote_count_by_community_2        int64  
- 11  retweet_count_by_community_3      int64  
- 12  quote_count_by_community_3        int64  
- 13  retweet_count_by_community_4      int64  
- 14  quote_count_by_community_4        int64  
- 15  retweet_count_by_suspended_users  int64  
- 16  quote_count_by_suspended_users    int64  
- 17  user_id                           int64  
- 18  quote_tweet                       float64
- 19  hashtags                          object 
+ 0   tweet_id                          str 
+ 1   user_community                    0 | 1 | 2 | 3 | 4 | null
+ 2   user_active_status                "active" | "suspended" | "deleted"
+ 3   retweet_count_metadata            int  
+ 4   quote_count_metadata              int  
+ 5   retweet_count_by_community_0      int  
+ 6   quote_count_by_community_0        int  
+ 7   retweet_count_by_community_1      int  
+ 8   quote_count_by_community_1        int  
+ 9   retweet_count_by_community_2      int  
+ 10  quote_count_by_community_2        int  
+ 11  retweet_count_by_community_3      int  
+ 12  quote_count_by_community_3        int  
+ 13  retweet_count_by_community_4      int  
+ 14  quote_count_by_community_4        int  
+ 15  retweet_count_by_suspended_users  int  
+ 16  quote_count_by_suspended_users    int  
+ 17  user_id                           str  
+ 18  quote_tweet                       str | null (id of the quoted tweet if this tweet is a quote)
+ 19  hashtags                          str[] 
  20  has_media                         bool   
- 21  timestamp                         object 
- 22  text                              object 
- 23  urls                              object 
- 24  resolved_urls                     object 
-dtypes: bool(1), float64(2), int64(16), object(6)
-memory usage: 1.4+ GB
+ 21  timestamp                         date 
+ 22  text                              str 
+ 23  urls                              str[] 
+ 24  resolved_urls                     str[] (excludes urls that start with twitter.com/. Fallback to urls if the url was not possible to resolve) 
+Pandas memory usage: 1.4+ GB
 ```
 ### /hydrated/retweets/
 ```
-(25566698, 3)
-<class 'pandas.core.frame.DataFrame'>
-Int64Index: 25566698 entries, 0 to 203826
-Data columns (total 3 columns):
+Data columns (total: 3 columns, 25,566,698 retweets):
  #   Column        Dtype 
 ---  ------        ----- 
- 0   retweeted_id  int64 
- 1   user_id       int64 
- 2   timestamp     object
-dtypes: int64(2), object(1)
-memory usage: 780.2+ MB
+ 0   retweeted_id  str 
+ 1   user_id       str
+ 2   timestamp     date
+Pandas memory usage: 780.2+ MB
 ```
 ### /hydrated/users/
 
@@ -138,52 +130,44 @@ memory usage: 780.2+ MB
 Some of the user metadata is missing since we didn't pull metadata for retweeting users.
 As long as the user tweeted at least once within our dataset, their metadata is included.
 
-For retweeting users, we retroactively pulled their metadata on February 1st.
+For users that only retweeted other users, we retroactively pulled their metadata on February 1st.
 For tweeting users, their metadata was pulled when we first streamed a tweet from this user or when we first streamed a retweet of this user's tweet (whichever comes first).
 
-If you are interested in the date the metadata was pulled you can look at the timestamp column in the retweets or tweets tables.
+If you are interested in when the metadata was pulled for each user you can look at the timestamp column in the retweets or tweets tables.
 
 ```
-(2559018, 24)
-<class 'pandas.core.frame.DataFrame'>
-Int64Index: 2559018 entries, 0 to 59017
-Data columns (total 24 columns):
  #   Column                                  Dtype  
 ---  ------                                  -----  
- 0   user_id                                 int64  
- 1   user_community                          float64
- 2   user_active_status                      object 
- 3   closeness_centrality_detractor_cluster  float64
- 4   closeness_centrality_promoter_cluster   float64
- 5   retweet_count_by_community_0            int64  
- 6   quote_count_by_community_0              int64  
- 7   retweet_count_by_community_1            int64  
- 8   quote_count_by_community_1              int64  
- 9   retweet_count_by_community_2            int64  
- 10  quote_count_by_community_2              int64  
- 11  retweet_count_by_community_3            int64  
- 12  quote_count_by_community_3              int64  
- 13  retweet_count_by_community_4            int64  
- 14  quote_count_by_community_4              int64  
- 15  retweet_count_by_suspended_users        int64  
- 16  quote_count_by_suspended_users          int64  
- 17  name                                    object 
- 18  handle                                  object 
- 19  created_at                              object 
- 20  verified                                object 
- 21  description                             object 
- 22  followers_count                         float64
- 23  location                                object 
-dtypes: float64(4), int64(13), object(7)
-memory usage: 488.1+ MB
+ 0   user_id                                 str  
+ 1   user_community                          0 | 1 | 2 | 3 | 4 | null
+ 2   user_active_status                      "active" | "suspended" | "deleted" 
+ 3   closeness_centrality_detractor_cluster  float | null
+ 4   closeness_centrality_promoter_cluster   float | null
+ 5   retweet_count_by_community_0            int  
+ 6   quote_count_by_community_0              int  
+ 7   retweet_count_by_community_1            int  
+ 8   quote_count_by_community_1              int  
+ 9   retweet_count_by_community_2            int  
+ 10  quote_count_by_community_2              int  
+ 11  retweet_count_by_community_3            int  
+ 12  quote_count_by_community_3              int  
+ 13  retweet_count_by_community_4            int  
+ 14  quote_count_by_community_4              int  
+ 15  retweet_count_by_suspended_users        int  
+ 16  quote_count_by_suspended_users          int  
+ 17  name                                    str 
+ 18  handle                                  str 
+ 19  created_at                              date 
+ 20  verified                                bool 
+ 21  description                             str 
+ 22  followers_count                         int
+ 23  location                                str
+Pandas memory usage: 488.1+ MB
 ```
 ### /anonymized/tweets/
 ```
 ../data/data-share/anonymized/tweets/
-(15206206, 25)
-<class 'pandas.core.frame.DataFrame'>
-Int64Index: 15206206 entries, 0 to 52584
-Data columns (total 25 columns):
+Data columns (total 25 columns, 7,603,103 tweets):
  #   Column                            Dtype  
 ---  ------                            -----  
  0   tweet_id                          int64  
@@ -211,20 +195,15 @@ Data columns (total 25 columns):
  22  text                              object 
  23  urls                              object 
  24  resolved_urls                     object 
-dtypes: bool(1), float64(2), int64(15), object(7)
-memory usage: 2.8+ GB
+Pandas memory usage: 2.8+ GB
 ```
 ### /anonymized/retweets/
 ```
-(25566698, 3)
-<class 'pandas.core.frame.DataFrame'>
-Int64Index: 25566698 entries, 0 to 203826
-Data columns (total 3 columns):
+Data columns (total: 3 columns, 25,566,698 retweets):
  #   Column          Dtype 
 ---  ------          ----- 
  0   retweeted_id    int64 
  1   hashed_user_id  object
  2   timestamp       object
-dtypes: int64(1), object(2)
-memory usage: 780.2+ MB
+Pandas memory usage: 780.2+ MB
 ```
