@@ -49,7 +49,7 @@ def create_user_df(data_dir="../data/14-nov/"):
     }
     return load_parsed_data(
         data_dir + "parsed_users.json",
-        exclude_cols={"description"},
+        exclude_cols={},
         limit=LIMIT,
         cast_cols=cast_cols,
         index_col="datastore_id",

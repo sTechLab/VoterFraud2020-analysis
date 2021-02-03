@@ -38,7 +38,7 @@ def parse_dataflow_export(directory, output_file, parse_item=None):
         processed = 0
         batch_time = time.time()
 
-        with open(os.path.join(directory, filename), "r") as r:
+        with open(os.path.join(directory, filename), "r", encoding="utf8") as r:
             for line in r:
                 raw_json = json.loads(line)
                 raw = raw_json["properties"]

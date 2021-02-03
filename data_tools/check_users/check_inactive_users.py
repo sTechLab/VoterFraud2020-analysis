@@ -83,11 +83,11 @@ if __name__ == '__main__':
         for line in f.readlines():
             inactive_user = json.loads(line)
             known_users.add(inactive_user["user_id"])
-    
+
     with open(uids_filename, "r") as inactive_uids:
         all_inactive_users = inactive_uids.read().split("\n")
         print("Inactive users:", len(all_inactive_users))
-        users_to_check = [user_id for user_id in all_inactive_users if user_id not in known_users]
+        users_to_check = [user_id for user_id in all_inactive_users if user_id not in known_users and user_id != ""]
         print("Known reasons:", len(all_inactive_users) - len(users_to_check))
         print("Checking users:", len(users_to_check))
         i = 0
@@ -109,6 +109,6 @@ if __name__ == '__main__':
                 print("Processed {}/{} user ids".format(i, len(users_to_check)))
             except Exception as e:
                 if ("Rate limit exceeded" in e.reason):
-                    print("Rate limited, waiting 5 minutes")
-                    time.sleep(60 * 5)
+                    print("Rate limited, waiting 1 minute")
+                    time.sleep(60 * 1)
         print("Done!")

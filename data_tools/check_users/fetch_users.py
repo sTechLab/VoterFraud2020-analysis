@@ -83,11 +83,11 @@ if __name__ == '__main__':
     import os
     import json
     import pandas as pd
-    import networkx as nx
+    import sys
     from collections import defaultdict
 
     load_dotenv()
-    CREDENTIALS = os.getenv("TWITTER_CREDENTIALS")
+    CREDENTIALS = sys.argv[2]
 
     configs = []
     with open("./" + CREDENTIALS) as f:
@@ -101,20 +101,26 @@ if __name__ == '__main__':
 
     api = tweepy.API(auth)
 
-    TYPE = "missing_active_uids"
+    TYPE = "retweets"
 
     if (TYPE == "retweets"):
         print("Loading dataframes...")
+        unknown_users = set()
         known_users = set(
-            pd.read_pickle('./notebooks/df_users_with_clustering.pickle')
+            pd.read_pickle('./data/dataframes/16-dec/df_users.pickle')
             .sort_values("followers_count", ascending=False).index.values)
         df_retweets = pd.read_pickle('./data/dataframes/16-dec/df_retweets.pickle')
 
         print("Loading known/unknown users...")
-        with open("./data/fetch_users/users_retweets.jsonl", "r") as f:
-            for line in f.readlines():
-                user = json.loads(line)
-                known_users.add(str(user["id"]))
+        for f_name in ["./data/fetch_users/users_retweets_2.jsonl", "./data/fetch_users/users_retweets.jsonl", "./data/fetch_users/users_retweets_3.jsonl"]:
+            with open(f_name, "r") as f:
+                for line in f.readlines():
+                    user = json.loads(line)
+                    known_users.add(str(user["id"]))
+        for f_name in ["./data/fetch_users/inactive_uids_retweets_2.txt", "./data/fetch_users/inactive_uids_retweets.txt", "./data/fetch_users/inactive_uids_retweets_3.txt"]:
+            with open(f_name, "r") as f:
+                for line in f.readlines():
+                    known_users.add(str(line).replace("\n", ""))
 
         def add_user(user_id):
             if (user_id not in known_users):
