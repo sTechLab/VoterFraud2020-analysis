@@ -48,19 +48,20 @@ def parse_tweet(tweet):
 
     return tweet
 
-
-EXPORT_TAG = "16-dec"
-
-data_sources = [
-    {"type": "retweets"},
-    {"type": "tweets", "parser": parse_tweet},
-    {"type": "users"},
-    {"type": "media"},
-    # {"type": "hashtag"},
-]
+data_source_map = {
+    "retweets": {"type": "retweets"},
+    "tweets": {"type": "tweets", "parser": parse_tweet},
+    "users": {"type": "users"},
+    "media": {"type": "media"},
+    "hashtag": {"type": "hashtag"},
+}
 
 
-for data_source in data_sources:
+EXPORT_TAG = "14-feb"
+data_sources = ["retweets", "tweets", "users"]
+
+for key in data_sources:
+    data_source = data_source_map[key]
     data_type = data_source["type"]
     data_parser = data_source["parser"] if "parser" in data_source else None
 
