@@ -15,16 +15,16 @@ def get_landing_page(shared_state):
         dataset with 7.6M tweets and 25.6M retweets from 2.6M users that includes [key phrases 
         and hashtags](https://github.com/sTechLab/VoterFraud2020/blob/main/keywords.txt) related to voter fraud 
         claims between October 23rd and December 16th. 
-        The dataset also includes the full set of links and YouTube videos shared in these tweets, 
+        The dataset also includes the full set of links and links to YouTube videos shared in these tweets, 
         with data about their spread in different Twitter sub-communities. Key takeaways from our initial analysis of the data are listed below.
 
         The methodology for our data collection including the tracked keywords is detailed in the paper:    
         [*A. Abilov, Y. Hua, H. Matatov, O. Amir and M. Naaman. (2021). VoterFraud2020: a Multi-modal Dataset of Election Fraud Claims on Twitter.*]
-        (https://arxiv.org/abs/2101.08210) The paper is currently undergoing peer-review.
+        (https://arxiv.org/abs/2101.08210) To Appear, International Conference on Web and Social Media ([ICWSM 2021](https://www.icwsm.org/2021/index.html)).
 
         The dataset is enhanced with the sub-community labels to enable quick study of how URLs, images and youtube videos spread within these sub-communities. 
         The navigation on [this page](/?page=Explore+The+Dataset) provides a quick summary of the top users, tweets, videos and links shared. 
-        Our data also identifies 99,884 suspended users, allowing researchers to investigate [Twitter's response](https://blog.twitter.com/en_us/topics/company/2021/protecting--the-conversation-following-the-riots-in-washington--.html) to voter fraud claims. 
+        Of the users in our data, we found that 99,884 were later suspended by Twitter. The suspension status of users are included, allowing researchers to investigate [Twitter's response](https://blog.twitter.com/en_us/topics/company/2021/protecting--the-conversation-following-the-riots-in-washington--.html) to voter fraud claims. 
         The dataset also includes perceptual hash values for all images in the data. With these values, researchers can easily find duplicates and near-duplicate images in tweets to identify popular images. 
         [This page](http://voterfraud2020.io/?page=Top+Images) presents top images shared in the dataset.
         
