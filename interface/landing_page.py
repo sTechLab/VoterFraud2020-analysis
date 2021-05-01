@@ -42,10 +42,10 @@ def get_landing_page(shared_state):
         - Community detection analysis on the dataset reveals five main sub-communities involved in the discussion: 
         four communities that appear to promote claims of voter fraud (*"promoters"*) and one community of *"detractors"* (colored blue in Figure 1 on this page).
         - Preliminary analyses show that Twitter’s suspensions mostly affected a specific sub-community within the cluster of voter fraud claim promoters (suspended users are orange in Figure 2, mostly overlapping with the yellow sub-community in Figure 1).
-        - Initial analysis found 34,938 users in the data who used QAnon-related hashtags in their tweets or profile descriptions. 
-        Of these users, 64% were suspended. There is strong evidence that Twitter’s suspensions focused on the QAnon community. 
-        We found that 79% of these “QAnon users” for whom we had network data were part of the "yellow" sub-community where suspension rates were highest (Figure 1). 
-        The rate of QAnon hashtags in the yellow sub-community was 6 to 90 times higher than other sub-communities in that graph.
+        - Initial analysis found 50,385 users in the data who used QAnon-related hashtags in their tweets or profile descriptions. 
+        Of these users, 52.4% were suspended. There is strong evidence that Twitter’s suspensions focused on the QAnon community. 
+        We found that 82.7% of these “QAnon users” for whom we had network data were part of the "yellow" sub-community where suspension rates were highest (Figure 1). 
+        The rate of QAnon hashtags in the yellow sub-community was 5 to 99 times higher than other sub-communities in that graph.
         - Many of the top YouTube videos shared by promoters of voter fraud claims are still available on YouTube as on 
         January 18th, 2021; all the top ten videos shared by the promoter communities were still available on YouTube on January 10th. Explore the list on [this page](/?page=Explore+The+Dataset).
         - Additional information about the data and analysis is available in [the paper](https://arxiv.org/abs/2101.08210).
