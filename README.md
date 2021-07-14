@@ -33,23 +33,23 @@ streamlit run app.py
 
 **7 days (anonymized data):**
 ```
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/retweets/2020-10.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/retweets/2020-11.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/retweets/2020-12.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/tweets/2020-10.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/tweets/2020-11.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/tweets/2020-12.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/retweets/2020-10.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/retweets/2020-11.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/retweets/2020-12.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/tweets/2020-10.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/tweets/2020-11.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/anonymized/tweets/2020-12.zip
 ```
 
 **7 days (hydrated data):**
 ```
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/retweets/2020-10.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/retweets/2020-11.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/retweets/2020-12.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/tweets/2020-10.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/tweets/2020-11.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/tweets/2020-12.zip
-gsutil signurl -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/users/users.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/retweets/2020-10.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/retweets/2020-11.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/retweets/2020-12.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/tweets/2020-10.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/tweets/2020-11.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/tweets/2020-12.zip
+gsutil signurl -r us -d 7d <private-key-file> gs://vote-safety-export/voterfraud2020-dataset/hydrated/users/users.zip
 ```
 
 
