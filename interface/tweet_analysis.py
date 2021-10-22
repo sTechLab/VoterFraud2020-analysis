@@ -67,7 +67,7 @@ def get_tweet_analysis_page(shared_state):
     st.plotly_chart(plotly_hourly_coverage(df_counts_by_hour, "retweet count", "Retweets", show_hourly_ticks))
     st.plotly_chart(plotly_hourly_coverage(df_counts_by_hour, "tweet count", "Tweets since Oct 23rd", show_hourly_ticks))
 
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     col1.subheader("Most common hashtags")
     col1.dataframe(get_most_common(df_most_common_hashtags, "all tweets", 25))
 

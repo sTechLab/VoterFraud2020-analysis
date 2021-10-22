@@ -45,7 +45,7 @@ def get_retweet_graph_analysis_page(shared_state):
         columns=["Community", "Users", "% relative size"],
     )
 
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     col1.markdown("![Table 1]({})".format(bucket_image_urls["community_stats"]))
     col2.markdown("![Figure 1]({})".format(bucket_image_urls["retweet_graph"]))
     st.markdown("""

@@ -36,7 +36,7 @@ def get_weekly_tweet_analysis_page(shared_state):
         "text"
     ]
 
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     tweets_top_n = max(col1.number_input("Show top N tweets (limited to 25)", value=5), 25)
     tweets_sort_column = col2.selectbox(
         "Sort by column", ["retweet_count", "quote_count"]

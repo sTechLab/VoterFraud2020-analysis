@@ -161,7 +161,7 @@ def get_explore_data_page(shared_state):
     coverage_stats = shared_state.coverage_stats
 
     st.header("Explore The Dataset")
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     selected_cluster = col1.selectbox(
         "Filter Users",
         [

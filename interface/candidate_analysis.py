@@ -21,7 +21,7 @@ def get_candidate_analysis_page(shared_state):
     """
     )
 
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
 
     filter_by_community = col1.multiselect("Filter by community", [0, 1, 2])
     filter_by_party = col2.multiselect(

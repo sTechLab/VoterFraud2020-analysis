@@ -87,7 +87,7 @@ def get_crawled_term_analysis_page(shared_state):
         )
     )
 
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     col1.subheader("Top hashtags for '{}'".format(selected_crawled_term))
     col1.dataframe(get_most_common(df_most_common_hashtags, selected_crawled_term, 15))
 
