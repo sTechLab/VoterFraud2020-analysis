@@ -1,5 +1,5 @@
 # VoterFraud2020-analysis
-This repository contains the code behind the data analysis presented in the VoterFraud2020 paper.
+This repository contains the code behind the data analysis presented in the VoterFraud2020 paper and [the website](https://voterfraud2020.io). The code requires the fully hydrated voter fraud data to run, which we are unable to share.
 
 - [voterfraud2020.io](http://voterfraud2020.io), interactive web application for exploring the dataset
 - [Figshare dataset publication](https://doi.org/10.6084/m9.figshare.13571084) with digital object identifier (DOI) **10.6084/m9.figshare.13571084**
@@ -15,6 +15,9 @@ python -m spacy download en_core_web_lg
 ```
 streamlit run app.py
 ```
+
+# For repository maintainers (stechlab)
+The below instructions require special permissions.
 
 ## Creating a new dump for analysis
 
