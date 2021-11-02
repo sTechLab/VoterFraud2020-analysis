@@ -1,5 +1,5 @@
 # VoterFraud2020-analysis
-This repository contains the code behind the data analysis presented in the VoterFraud2020 paper and [the website](https://voterfraud2020.io). The code requires the raw data to run, which we are unable to share.
+This repository contains the code behind the data analysis presented in the VoterFraud2020 paper and [the website](https://voterfraud2020.io). It is primiarly meant for internal use by the authors since the code requires the raw data to run, which we are unable to share. We hope that making this repository publicly available can be helpful for others who are doing a similar analysis.
 
 - [voterfraud2020.io](http://voterfraud2020.io), interactive web application for exploring the dataset
 - [Figshare dataset publication](https://doi.org/10.6084/m9.figshare.13571084) with digital object identifier (DOI) **10.6084/m9.figshare.13571084**
