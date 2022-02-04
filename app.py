@@ -14,7 +14,6 @@ import pickle5 as pickle
 st.set_page_config(
     page_title="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims",
     page_icon="./interface/img/favicon.ico",
-    # layout = 'wide',
     initial_sidebar_state="expanded",
 )
 
