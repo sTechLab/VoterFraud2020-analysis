@@ -7,9 +7,9 @@ from interface.top_image_analysis import get_top_image_analysis_page
 from interface.candidate_analysis import get_candidate_analysis_page
 from interface.explore_data import get_explore_data_page
 import interface.SessionState as SessionState
-from interface.df_utils import load_pickled_df
+# from interface.df_utils import load_pickled_df
 from interface.image_urls import bucket_image_urls
-import pickle5 as pickle
+import pickle
 
 st.set_page_config(
     page_title="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims",

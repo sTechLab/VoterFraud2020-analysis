@@ -1,5 +1,5 @@
 import pandas as pd
-import pickle5 as pickle
+import pickle
 
 def load_pickled_df(filename):
     with open(filename, "rb") as fh:
