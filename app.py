@@ -32,48 +32,49 @@ def insert_html_header(name, snippet):
             print("{} already inserted".format(name))
 
 
+# Disabled headers for streamlit serving compatibility
 ## Google analytics
-insert_html_header(
-    "Google Analytics Tag",
-    """
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8VB4WZRD7C"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+# insert_html_header(
+#     "Google Analytics Tag",
+#     """
+# <!-- Global site tag (gtag.js) - Google Analytics -->
+# <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VB4WZRD7C"></script>
+# <script>
+#   window.dataLayer = window.dataLayer || [];
+#   function gtag(){dataLayer.push(arguments);}
+#   gtag('js', new Date());
 
-  gtag('config', 'G-8VB4WZRD7C');
-</script>
-""",
-)
+#   gtag('config', 'G-8VB4WZRD7C');
+# </script>
+# """,
+# )
 
-insert_html_header(
-    "Meta tags",
-    """
-<!-- Primary Meta Tags -->
-<title>VoterFraud2020 - a Twitter Dataset of Election Fraud Claims</title>
-<meta name="title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
-<meta name="description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
+# insert_html_header(
+#     "Meta tags",
+#     """
+# <!-- Primary Meta Tags -->
+# <title>VoterFraud2020 - a Twitter Dataset of Election Fraud Claims</title>
+# <meta name="title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
+# <meta name="description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://metatags.io/">
-<meta property="og:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
-<meta property="og:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
-<meta property="og:image" content="{}">
+# <!-- Open Graph / Facebook -->
+# <meta property="og:type" content="website">
+# <meta property="og:url" content="https://metatags.io/">
+# <meta property="og:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
+# <meta property="og:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
+# <meta property="og:image" content="{}">
 
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://metatags.io/">
-<meta property="twitter:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
-<meta property="twitter:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
-<meta property="twitter:image" content="{}">
-""".format(
-        bucket_image_urls["retweet_graph_suspended"],
-        bucket_image_urls["retweet_graph_suspended"],
-    ),
-)
+# <!-- Twitter -->
+# <meta property="twitter:card" content="summary_large_image">
+# <meta property="twitter:url" content="https://metatags.io/">
+# <meta property="twitter:title" content="VoterFraud2020 - a Twitter Dataset of Election Fraud Claims">
+# <meta property="twitter:description" content="Voterfraud2020 is a multi-modal Twitter dataset with 7.6M tweets and 25.6M retweets from 2.6M users related to voter fraud claims.">
+# <meta property="twitter:image" content="{}">
+# """.format(
+#         bucket_image_urls["retweet_graph_suspended"],
+#         bucket_image_urls["retweet_graph_suspended"],
+#     ),
+# )
 
 query_params = st.experimental_get_query_params()
 app_state = st.experimental_get_query_params()
