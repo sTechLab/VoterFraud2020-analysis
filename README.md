@@ -5,15 +5,17 @@ This repository contains the code behind the data analysis presented in the Vote
 - [Figshare dataset publication](https://doi.org/10.6084/m9.figshare.13571084) with digital object identifier (DOI) **10.6084/m9.figshare.13571084**
 
 
-## Repository set up
+
+## Run the streamlit app
 ```
 pip install -r requirements.txt
-python -m spacy download en_core_web_lg
+streamlit run app.py
 ```
 
-### Run the streamlit app
+## Full repository set up
 ```
-streamlit run app.py
+pip install -r requirements_extra.txt
+python -m spacy download en_core_web_lg
 ```
 
 # For repository maintainers (stechlab)
