@@ -1,0 +1,10 @@
+networkx
+python-louvain
+twarc
+scikit-learn
+bs4
+spacy
+gensim
+tweepy
+torch
+nltk
